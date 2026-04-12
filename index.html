@@ -128,7 +128,7 @@ a{color:var(--secondary);text-decoration:none}
 .game-select{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
 @media(min-width:768px){.game-select{grid-template-columns:repeat(4,1fr)}}
 .game-card{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem 1rem;text-align:center;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden}
-.game-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 60%,var(--primary-light));opacity:0;transition:var(--transition)}
+.game-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 60%,var(--primary-light));opacity:0;transition:var(--transition);pointer-events:none}
 .game-card:hover{border-color:var(--primary);transform:translateY(-4px);box-shadow:var(--shadow-lg)}.game-card:hover::after{opacity:1}
 .game-card .g-icon{font-size:2.5rem;margin-bottom:.4rem;display:block;position:relative;z-index:1}
 .game-card h3{font-size:.95rem;position:relative;z-index:1;margin-bottom:.2rem}
