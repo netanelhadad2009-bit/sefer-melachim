@@ -5047,54 +5047,40 @@ let h=`<div class="game-area">
 <div class="score-bar"><span>שאלה ${gameState.current+1} / ${gameState.total}</span><span id="gameTimer" style="font-family:monospace">${formatTime(gameState.seconds)}</span><span>⭐ ${gameState.score}/${gameState.current}</span></div>
 <div style="height:4px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden"><div style="height:100%;background:var(--primary);width:${(gameState.current/gameState.total)*100}%;transition:width .4s ease;border-radius:2px"></div></div>`;
 if(t==='map'){
-// Interactive SVG Map with clickable location pins
-const mapLocs={
-"ירושלים":{x:148,y:228},"מעיין הגיחון":{x:151,y:232},"גבעון":{x:143,y:218},
-"עציון גבר":{x:130,y:370},"צור":{x:118,y:68},"חצור":{x:155,y:105},
-"מגידו":{x:133,y:135},"גזר":{x:125,y:220},"שכם":{x:148,y:180},
-"דן":{x:160,y:70},"בית אל":{x:150,y:205},"שומרון":{x:140,y:172},
-"פנואל":{x:175,y:175},"תרצה":{x:152,y:165},"הרמה":{x:145,y:212},
-"הר הכרמל":{x:118,y:138},"נחל כרית":{x:170,y:190},"צרפת":{x:122,y:60},
-"באר שבע":{x:122,y:285},"הר חורב":{x:100,y:385},"יזרעאל":{x:145,y:145},
-"נחל קישון":{x:125,y:140},"לכיש":{x:120,y:245},"נינוה":{x:240,y:50},
-"בבל":{x:260,y:100},"דמשק":{x:190,y:75},"ערבות יריחו":{x:165,y:230},
-"עכו":{x:118,y:115},"יפו":{x:108,y:195},"אילת":{x:128,y:372}
+// Map game — region-based visual layout with big location buttons
+const regionMap={
+"צור":"צפון","צרפת":"צפון","דן":"צפון","חצור":"צפון","עכו":"צפון",
+"הר הכרמל":"צפון","נחל קישון":"צפון","מגידו":"צפון","יזרעאל":"צפון",
+"שכם":"מרכז","שומרון":"מרכז","תרצה":"מרכז","פנואל":"מרכז","נחל כרית":"מרכז",
+"בית אל":"מרכז","הרמה":"מרכז","גבעון":"מרכז","גזר":"מרכז","יפו":"מרכז",
+"ירושלים":"ירושלים","מעיין הגיחון":"ירושלים","ערבות יריחו":"ירושלים",
+"לכיש":"דרום","באר שבע":"דרום","עציון גבר":"דרום","אילת":"דרום","הר חורב":"דרום",
+"דמשק":"חוץ","נינוה":"חוץ","בבל":"חוץ"
 };
-h+=`<div class="game-question" style="margin-bottom:.5rem">🗺️ לחצו על המקום הנכון במפה!</div>
-<p style="text-align:center;font-size:1.05rem;font-weight:700;color:var(--primary);margin-bottom:.8rem">"${q.desc}"</p>
-<div style="display:flex;justify-content:center;margin-bottom:.5rem">
-<svg viewBox="0 0 300 420" style="width:100%;max-width:400px;height:auto;filter:drop-shadow(0 2px 12px rgba(0,0,0,.1))" id="mapSvg">
-<defs>
-<linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#B8D8F0"/><stop offset="100%" stop-color="#92C5E8"/></linearGradient>
-<filter id="pinShadow"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-opacity=".3"/></filter>
-</defs>
-<rect width="300" height="420" fill="url(#seaGrad)" rx="12"/>
-<path d="M95,15 L120,12 L145,18 L160,35 L168,55 L165,75 L160,85 L155,95 L148,110 L140,125 L132,135 L125,145 L122,155 L125,170 L128,185 L130,195 L125,210 L120,225 L115,240 L112,260 L110,275 L108,290 L112,305 L118,320 L125,340 L130,355 L128,365 L122,375 L115,390 L110,400 L105,395 L100,385 L95,370 L90,350 L85,330 L82,310 L80,290 L78,270 L80,250 L85,230 L88,210 L90,195 L88,180 L85,165 L82,150 L80,135 L78,120 L80,100 L82,85 L85,70 L88,55 L90,40 L92,25 Z" fill="#E8DCC8" stroke="#8B7D6B" stroke-width="1.5"/>
-<path d="M160,85 Q170,110 168,135 Q165,160 162,175 L155,178 Q157,160 160,140 Q162,115 158,90 Z" fill="rgba(74,144,226,.4)" stroke="rgba(74,144,226,.3)" stroke-width=".5"/>
-<ellipse cx="155" cy="245" rx="10" ry="25" fill="rgba(74,144,226,.5)" stroke="rgba(74,144,226,.3)" stroke-width=".5"/>
-<path d="M110,395 L130,370 L128,365" fill="none" stroke="rgba(74,144,226,.4)" stroke-width="6" stroke-linecap="round"/>
-<text x="50" y="200" fill="rgba(74,144,226,.5)" font-size="10" font-weight="600" transform="rotate(-90,50,200)">ים תיכון</text>
-<text x="155" y="248" fill="rgba(0,0,0,.3)" font-size="6" text-anchor="middle">ים המלח</text>
-<text x="155" y="100" fill="rgba(0,0,0,.2)" font-size="6" text-anchor="middle">כנרת</text>
-<line x1="162" y1="90" x2="162" y2="178" stroke="rgba(74,144,226,.4)" stroke-width="2" stroke-dasharray="3,2"/>
-<text x="175" y="140" fill="rgba(74,144,226,.3)" font-size="5">ירדן</text>`;
-// Add clickable pins for each option
-const opts=q.options;
-opts.forEach(opt=>{
-const loc=mapLocs[opt];
-if(loc){
-h+=`<g class="map-pin" style="cursor:pointer" onclick="checkMapPin('${opt.replace(/'/g,"\\'")}',this)" data-name="${opt}">
-<circle cx="${loc.x}" cy="${loc.y}" r="12" fill="var(--primary)" opacity=".15"/>
-<circle cx="${loc.x}" cy="${loc.y}" r="7" fill="var(--card)" stroke="var(--primary)" stroke-width="2" filter="url(#pinShadow)"/>
-<circle cx="${loc.x}" cy="${loc.y}" r="3" fill="var(--primary)"/>
-<text x="${loc.x}" y="${loc.y-12}" text-anchor="middle" font-size="7" font-weight="700" fill="var(--text)" font-family="Assistant,sans-serif">${opt}</text>
-</g>`;
-}});
-h+=`</svg></div>
-<p style="text-align:center;color:var(--text-light);font-size:.8rem;margin-bottom:.5rem">לחצו על הנקודה הנכונה במפה</p>
-<div id="gameFb" style="margin-top:.5rem"></div>`;
-// No button fallback - pins only
-h+='<div style="display:none">';
+const regionLabels={"צפון":"🏔️ צפון הארץ","מרכז":"🏘️ מרכז הארץ","ירושלים":"🏛️ אזור ירושלים","דרום":"🏜️ דרום הארץ","חוץ":"🌍 מחוץ לארץ"};
+const regionColors={"צפון":"#2E7D32","מרכז":"#1565C0","ירושלים":"#D4721A","דרום":"#C62828","חוץ":"#6A1B9A"};
+h+=`<div class="game-question" style="margin-bottom:.3rem">🗺️ איפה נמצא המקום?</div>
+<p style="text-align:center;font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:1rem;line-height:1.6">"${q.desc}"</p>`;
+// Group options by region and render as a visual map layout
+const optsByRegion={};
+q.options.forEach(opt=>{const r=regionMap[opt]||'מרכז';if(!optsByRegion[r])optsByRegion[r]=[];optsByRegion[r].push(opt);});
+const regionOrder=["צפון","מרכז","ירושלים","דרום","חוץ"];
+h+=`<div style="max-width:400px;margin:0 auto">`;
+regionOrder.forEach(r=>{
+if(!optsByRegion[r])return;
+const color=regionColors[r];
+h+=`<div style="margin-bottom:.4rem">
+<div style="font-size:.7rem;font-weight:700;color:${color};padding:.1rem .5rem;opacity:.7">${regionLabels[r]}</div>
+<div style="display:flex;gap:.4rem;flex-wrap:wrap">`;
+optsByRegion[r].forEach(opt=>{
+h+=`<button class="game-opt" style="flex:1;min-width:120px;border-color:${color}30;position:relative;padding:.8rem .5rem" onclick="checkGameAns('${opt.replace(/'/g,"\\'")}',this)" data-name="${opt}">
+<span style="font-size:1.2rem;display:block;margin-bottom:.2rem">📍</span>
+<span style="font-weight:700;font-size:.95rem">${opt}</span>
+</button>`;
+});
+h+=`</div></div>`;
+});
+h+=`</div>`;
 }else if(t==='quotes'){
 // Scroll/quote reveal style
 h+=`<div style="text-align:center;margin-bottom:1.5rem">
@@ -5110,29 +5096,6 @@ h+='</div>';
 }
 h+='<div id="gameFb" style="margin-top:.8rem"></div></div>';
 area.innerHTML=h;
-}
-function checkMapPin(name,el){
-const q=gameState.questions[gameState.current];
-const correct=q.answer;
-const svg=document.getElementById('mapSvg');
-// Highlight all pins
-svg.querySelectorAll('.map-pin').forEach(pin=>{
-const n=pin.getAttribute('data-name');
-const circles=pin.querySelectorAll('circle');
-if(n===correct){
-circles.forEach(c=>{c.setAttribute('fill','var(--success)');c.setAttribute('stroke','var(--success)');});
-circles[0].setAttribute('fill','rgba(76,175,125,.3)');circles[0].setAttribute('r','16');
-}else{
-circles.forEach(c=>{c.setAttribute('opacity','.3');});
-}
-pin.style.pointerEvents='none';
-});
-const isCorrect=name===correct;
-if(isCorrect)gameState.score++;
-gameState.answers.push({q:q.desc,selected:name,correct,isCorrect});
-const fb=document.getElementById('gameFb');
-fb.innerHTML=isCorrect?`<div class="feedback show correct-fb" style="text-align:center"><strong>✓ נכון!</strong> ${correct}</div>`:`<div class="feedback show wrong-fb" style="text-align:center"><strong>✗</strong> התשובה: <strong>${correct}</strong></div>`;
-setTimeout(()=>{gameState.current++;if(gameState.current>=gameState.total)showGameResult();else renderGameQ(document.getElementById('gameArea'));},1800);
 }
 function checkGameAns(ans,btn){
 const q=gameState.questions[gameState.current];
