@@ -375,7 +375,13 @@ a{color:var(--secondary);text-decoration:none}
 .mindmap-root{background:var(--primary);color:#fff;display:inline-block;font-size:1rem;padding:.5rem 1rem;border-radius:var(--radius);margin-bottom:.5rem}
 .mindmap-branch{margin-right:1.5rem;padding-right:1rem;border-right:2px solid var(--primary);margin-bottom:.5rem}
 .mindmap-leaf{background:var(--primary-light);color:var(--primary-dark);display:inline-block;margin:.2rem .3rem}
-.ai-summary{background:var(--secondary-light);border:1px solid rgba(61,124,201,.15);border-radius:var(--radius-sm);padding:1rem;font-size:.92rem;line-height:1.8;white-space:pre-wrap}
+.ai-summary{background:var(--secondary-light);border:1px solid rgba(61,124,201,.15);border-radius:var(--radius-sm);padding:1rem;font-size:.92rem;line-height:1.8}
+.ai-summary h3{font-size:1rem;color:var(--primary);margin:1.2rem 0 .5rem;font-weight:700}
+.ai-summary h4{font-size:.95rem;color:var(--primary-dark);margin:1rem 0 .4rem;font-weight:700}
+.ai-summary ul,.ai-summary ol{margin:.3rem 0 .8rem 0;padding-right:1.2rem;padding-left:0}
+.ai-summary li{margin-bottom:.3rem}
+.ai-summary p{margin:0 0 .6rem}
+.ai-summary strong{color:var(--primary-dark)}
 /* === RESPONSIVE === */
 @media(max-width:576px){
 body{font-size:15px;padding-top:56px}
@@ -693,8 +699,23 @@ americanQuestions:[
     {q:"כמה משלים דיבר שלמה?",options:["אלף","שלושת אלפים","חמישה ואלף","עשרת אלפים"],correct:1,explanation:'הכתוב מציין: "וידבר שלשת אלפים משל ויהי שירו חמישה ואלף" — ביטוי לחכמתו יוצאת הדופן.'},
     {q:"מה הביאה מלכת שבא לשלמה?",options:["סוסים ומרכבות","120 ככר זהב, בשמים ואבנים יקרות","עבדים ושפחות","ארזים וברושים"],correct:1,explanation:"מלכת שבא הביאה מתנות עצומות: 120 ככר זהב, בשמים הרבה מאוד ואבנים יקרות."},
     {q:"מה נאמר על שלמה בתחילת מלכותו ביחס לה'?",options:['"וירא שלמה את ה\'"','"ויאהב שלמה את ה\'"','"וישמע שלמה את ה\'"','"ויבטח שלמה בה\'"'],correct:1,explanation:'"ויאהב שלמה את ה\'" — ביטוי מיוחד שנאמר רק על שלמה המלך, המדגיש את הקשר הרוחני העמוק בתחילת מלכותו.'},
-    {q:"מה בנה שלמה בתמורה לעצי הארזים שקיבל מחירם?",options:["בית מקדש בצור","ערים בגליל","נמל בצידון","ארמון בלבנון"],correct:1,explanation:"שלמה נתן לחירם 20 ערים בגליל — אזור שגבל עם ממלכת צור — כתמורה לעצים, זהב ועזרה בבנייה."}
-  
+    {q:"מה בנה שלמה בתמורה לעצי הארזים שקיבל מחירם?",options:["בית מקדש בצור","ערים בגליל","נמל בצידון","ארמון בלבנון"],correct:1,explanation:"שלמה נתן לחירם 20 ערים בגליל — אזור שגבל עם ממלכת צור — כתמורה לעצים, זהב ועזרה בבנייה."},
+    // שאלות נוספות מיחידה 1 - מבוססות על שאלות חזרה מקובץ sheelot.pdf
+    {q:"היכן התרחש טקס המלכת שלמה?",options:["בגבעון","בגיחון","בירושלים","בשכם"],correct:1,explanation:"שלמה נמשח למלך במעיין הגיחון — מקור המים המרכזי של ירושלים, הסמוך לעיר דוד."},
+    {q:"איזו מן ההבטחות שהבטיח ה' לשלמה בגבעון ניתנה עם תנאי?",options:["חכמה","עושר","כבוד","אריכות ימים"],correct:3,explanation:"ה' מתנה את אריכות הימים: 'ואם תלך בדרכי לשמר חקי ומצותי... והארכתי את ימיך'."},
+    {q:"מה כלל ההסכם בין שלמה לחירם מלך צור בנוגע לבניית המקדש?",options:["חירם יספק עצי ארזים וברושים ועבדיהם יעבדו יחד","חירם יבנה את המקדש לבדו בתמורה לשטחים","שלמה יספק נשק כדי להגן על צור","חירם יעניק לשלמה את גזר תמורת מס"],correct:0,explanation:"שלמה ביקש מחירם: 'ויכרתו לי ארזים מן הלבנון... ועבדי יהיו עם עבדיך'."},
+    {q:"מי לכד את העיר גזר ומה עשה בה?",options:["פרעה מלך מצרים שרף אותה ונתן כנדוניה לבתו אשת שלמה","חירם מלך צור מסר אותה לשלמה","שלמה כבש אותה מידי מלך ארם","מלכת שבא הביאה אותה כמתנה"],correct:0,explanation:"פרעה מלך מצרים כבש את גזר, שרפה, והרג את הכנעני בה — ונתן אותה כשילוחים לבתו אשת שלמה."},
+    {q:"מהו התנאי לקיום מלכות בית דוד שהשמיע ה' בהתגלותו השנייה לשלמה?",options:["הליכה בדרכי ה' ושמירת חוקיו ומשפטיו","בניית ערי מסכנות נוספות","הבאת מתנות משאר העמים","העלאת המס על העם"],correct:0,explanation:"ה' מזהיר שעל שלמה להקפיד 'לשמר חקותיו ומשפטיו', אחרת 'קרע אקרע את הממלכה מעליך'."},
+    {q:"אילו ערים בנה שלמה בנוסף לבית המקדש ובית המלך?",options:["ערי מסכנות, ערי רכב וערי פרשים","ערי מקלט","ערי בירה במצרים","ערי מסחר באדום"],correct:0,explanation:"שלמה בנה את ערי המסכנות, ערי הרכב וערי הפרשים לחיזוק ממלכתו."},
+    {q:"כיצד הגיבה מלכת שבא כשראתה את חכמת שלמה?",options:["הודתה שהמציאות עולה על השמועות — 'לא הוגד לי החצי'","טענה שהשמועות מוגזמות","עזבה מיד בחזרה לארצה","רצתה לכרות ברית צבאית"],correct:0,explanation:"מלכת שבא אומרת לשלמה: 'ולא האמנתי לדברים עד אשר באתי ותראינה עיני והנה לא הגד לי החצי'."},
+    {q:"מה היה העונש שנגזר על שלמה בעקבות חטאו?",options:["קריעת הממלכה וחלוקתה, אך רק בימי בנו","חורבן מיידי של המקדש","הגלייתו מארץ ישראל","השמדת כל צאצאיו"],correct:0,explanation:"ה' אמר לשלמה: 'קרע אקרע את הממלכה מעליך ונתתיה לעבדך... אך בימיך לא אעשנה למען דוד אביך'."},
+    {q:"מה מבטיח ה' לשלמה לגבי בית המקדש לאחר סיום בנייתו?",options:["שיקדש את הבית וישים שמו בו עד עולם","שהבית לא ייחרב לעולם","שכל העמים יתפללו בו","שכל עושרו יישמר בו"],correct:0,explanation:"ה' מבטיח: 'הקדשתי את הבית הזה אשר בנתה לשום שמי שם עד עולם והיו עיני ולבי שם'."},
+    {q:"איזה ביטוי מציין את השלווה בממלכת שלמה?",options:["'וישב יהודה וישראל לבטח איש תחת גפנו ותחת תאנתו'","'ויהי שלום בין שלמה וחירם'","'כל הארץ שקטה ממלחמה'","'וירב השלום בכל גבולותיו'"],correct:0,explanation:"הביטוי 'וישב יהודה וישראל לבטח איש תחת גפנו ותחת תאנתו' מעיד על הביטחון והשלווה בימי שלמה."},
+    {q:"אילו אולמות מוזכרים שנבנו כחלק מבית המלך?",options:["בית יער הלבנון ואולם הכסא","בית עגל הזהב ומזבח הנחושת","בתים מבוצרים למלכת שבא","מקדשים לעבודה זרה"],correct:0,explanation:"בין אולמות בית המלך נמנים 'בית יער הלבנון' — אולם גדול עם עמודי ארז, ו'אולם הכסא' — מקום המשפט."},
+    {q:"מהם שני העונשים שה' הזהיר בהתגלות השנייה?",options:["גלות וחורבן המקדש","מלחמה ורעב","מגפה ובצורת","כיבוש ועבדות"],correct:0,explanation:"ה' הזהיר: אם יסורו מדרכו — ישראל ייכרת מעל האדמה (גלות), והמקדש ישולח מעל פניו (חורבן)."},
+    {q:"כמה משלים דיבר שלמה?",options:["אלף","שלושת אלפים","חמישה ואלף","עשרת אלפים"],correct:1,explanation:"הכתוב מציין: 'וידבר שלשת אלפים משל ויהי שירו חמישה ואלף' — ביטוי לחכמתו יוצאת הדופן."},
+    {q:"מה הביאה מלכת שבא כמתנות לשלמה?",options:["סוסים ומרכבות","120 ככר זהב, בשמים ואבנים יקרות","עבדים ושפחות","חיילים ועבדים"],correct:1,explanation:"מלכת שבא הביאה מתנות עצומות: 120 ככר זהב, בשמים הרבה מאוד ואבנים יקרות."}
+
 ],
 bagrutQuestions:[
 {q:'ציינו שניים ממעשיו של שלמה שבגללם נגזרה עליו הגזרה "קרוע אקרע את הממלכה".',answer:'<p><strong>1.</strong> שלמה נשא נשים נוכריות רבות (700 נשים ו-300 פילגשים) — דבר שעמד בניגוד לאזהרת התורה "לא תבוא בהם והם לא יבואו בך".</p><p><strong>2.</strong> נשותיו הטו את ליבו ושלמה בנה במות לאלילים — לכמוש אלוהי מואב ולמולך אלוהי עמון.</p><p>הכתוב מדגיש: "לבבו לא היה שלם עם ה\' אלוקיו כלבב דוד אביו" — השוואה שלילית לדוד.</p>',source:'בגרות תשפ"ד, שאלה 9'},
@@ -822,8 +843,23 @@ americanQuestions:[
     {q:"מי הנביא ששלח ה' למנוע מרחבעם להילחם בישראל?",options:["אחיה","אליהו","שמעיה","נתן"],correct:2,explanation:'שמעיה הנביא אמר לרחבעם: "לא תעלו ולא תילחמו עם אחיכם בני ישראל כי מאיתי נהיה הדבר הזה".'},
     {q:"מה עשה רחבעם במקום מגיני הזהב שלקח שישק?",options:["עשה מגיני כסף","עשה מגיני נחושת","לא עשה כלום","ביקש מחירם מגינים חדשים"],correct:1,explanation:"רחבעם עשה מגיני נחושת במקום מגיני הזהב — סמל להידרדרות מזוהר שלמה לעוני."},
     {q:"כמה ערי בירה היו לממלכת ישראל לפני שומרון?",options:["אחת","שתיים","שלוש","ארבע"],correct:2,explanation:"שלוש ערי בירה לפני שומרון: שכם (ירבעם), פנואל (ירבעם), תרצה (ירבעם עד עמרי). עמרי בנה את שומרון."},
-    {q:"מדוע הדיח אסא את מעכה אמו מגבירה?",options:["כי מרדה בו","כי עשתה מפלצת לאשרה","כי תמכה בירבעם","כי גנבה מהמקדש"],correct:1,explanation:"אסא הדיח את מעכה אמו כי עשתה 'מפלצת לאשרה' — כרת את המפלצת ושרפה בנחל קדרון. מעשה אמיץ."}
-  
+    {q:"מדוע הדיח אסא את מעכה אמו מגבירה?",options:["כי מרדה בו","כי עשתה מפלצת לאשרה","כי תמכה בירבעם","כי גנבה מהמקדש"],correct:1,explanation:"אסא הדיח את מעכה אמו כי עשתה 'מפלצת לאשרה' — כרת את המפלצת ושרפה בנחל קדרון. מעשה אמיץ."},
+    // שאלות נוספות מיחידה 2 - מבוססות על שאלות חזרה מקובץ sheelot.pdf
+    {q:"מה היה המעשה הסמלי שעשה אחיה השילוני בפגישתו עם ירבעם?",options:["קרע את שלמתו ל-12 קרעים ונתן לירבעם 10 כסמל לקריעת המלוכה","נתן לו עטרת זהב כסמל למלוכה","שבר כד חרס מולו כסמל לחורבן","משח אותו בשמן בפני כל העם"],correct:0,explanation:"אחיה קורע את שלמתו ומעניק לירבעם עשרה קרעים: 'הנני קורע את הממלכה מיד שלמה ונתתי לך את עשרה השבטים'."},
+    {q:"מה הייתה בקשת העם מרחבעם בתחילת מלכותו?",options:["לצאת למלחמה נגד מצרים","לבנות מקדש חדש בשכם","להקל מעבודת אביו הקשה ומעולו הכבד","למנות את ירבעם לשר הצבא"],correct:2,explanation:"העם פנה לרחבעם: 'אביך הקשה את עולנו ואתה עתה הקל מעבודת אביך הקשה ומעולו הכבד'."},
+    {q:"באיזו עצה בחר רחבעם?",options:["בעצת הזקנים — להיות לעבד לעם","בעצת הילדים — לבטל את המיסים","בעצת הילדים — 'אבי יסר אתכם בשוטים ואני איסר אתכם בעקרבים'","בעצת הזקנים — להמליך את ירבעם לצידו"],correct:2,explanation:"רחבעם עזב את עצת הזקנים ואימץ את תשובת הילדים הנוקשה שהכבידה את העול על העם."},
+    {q:"כיצד הגיב העם כאשר רחבעם סירב להקל?",options:["נכנעו והסכימו","מרדו וקראו: 'מה לנו חלק בדוד... לאוהליך ישראל!'","שרפו את ארמון המלך","פנו לשמעיה להכריע"],correct:1,explanation:"העם מרד בבית דוד בהכרזה שאין להם חלק ונחלה בממלכתו."},
+    {q:"מה אמר שמעיה איש האלוהים לרחבעם לאחר הפילוג?",options:["לעשות מלחמה מיד","'לא תעלו ולא תלחמון עם אחיכם... כי מאתי נהיה הדבר'","לבקש עזרה ממצרים","לבנות ערי מבצר"],correct:1,explanation:"שמעיהו מונע מלחמת אחים: 'שובו איש לביתו כי מאתי נהיה הדבר הזה'."},
+    {q:"ממה חשש ירבעם ומה עשה בעקבות זאת?",options:["חשש שהעם יחזור לבית דוד ולכן עשה שני עגלי זהב","חשש מהתקפה ארמית ובנה חומות","חשש ממרידה וגירש את שבט יהודה","חשש שאחיה יחזור בו"],correct:0,explanation:"ירבעם פחד כי 'אם יעלה העם הזה... ושב לב העם... אל רחבעם'. הפתרון — עגלי זהב: 'הנה אלוהיך ישראל'."},
+    {q:"אילו חטאים נוספים מלבד עגלי הזהב מיוחסים לירבעם?",options:["כרת ברית עם אשור","השמיד את נביאי ה'","הכניס את פולחן הבעל","עשה בית במות, מינה כהנים מקצות העם ובדה חג מליבו"],correct:3,explanation:"ירבעם עשה כהנים 'מקצות העם אשר לא היו מבני לוי', בנה בית במות, ועשה חג 'בחודש אשר בדא מליבו'."},
+    {q:"מדוע ביקש ירבעם מאשתו להתחפש לפני אחיה השילוני?",options:["כדי שלא יזהה אותה כאשת ירבעם ויוכל לדרוש על בנו החולה","כי רצתה להתחזות לאישה מיהודה","כי הייתה סכנת חיים בדרכים","כי הנביא דרש שרק נשים פשוטות יגיעו"],correct:0,explanation:"ירבעם אמר לה 'קומי נא והשתני ולא ידעו כי את אשת ירבעם' כדי לדרוש על בנם החולה."},
+    {q:"מה ניבא אחיה השילוני לאשת ירבעם?",options:["ירבעם יוגלה לבבל","המלוכה תעבור לבנו","השמדת בית ירבעם — המתים יאכלו על ידי כלבים ועוף השמים והילד ימות","הילד יחלים אך ירבעם ימות"],correct:2,explanation:"אחיה מנבא כליון מוחלט: 'המת לירבעם בעיר יאכלו הכלבים והמת בשדה יאכלו עוף השמים', ו'ומת הילד'."},
+    {q:"מי עלה על ירושלים בימי רחבעם ולקח את אוצרות המקדש?",options:["בן הדד מלך ארם","שישק מלך מצרים","עמרי מלך ישראל","מלך פלשתים"],correct:1,explanation:"שישק מלך מצרים עלה על ירושלים ולקח את אוצרות בית ה' ואוצרות בית המלך."},
+    {q:"אל מי פנה אסא מלך יהודה בבקשת עזרה נגד בעשא?",options:["אל בן הדד מלך ארם ונתן לו שוחד כסף וזהב","אל שישק מלך מצרים","אל חירם מלך צור","אל שמעיהו הנביא"],correct:0,explanation:"אסא שלח למלך ארם בקשה ואמר 'הנה שלחתי לך שחד כסף וזהב'."},
+    {q:"כיצד הסתיימה מלכותו הקצרה של זמרי?",options:["הוגלה לארם","עמרי צר עליו ושרף על עצמו את הארמון","נרצח על ידי עבדיו","ברח למצרים"],correct:1,explanation:"העם המליך את עמרי שצר על תרצה, וכשזמרי ראה שהעיר נלכדת שרף על עצמו את בית המלך באש."},
+    {q:"איזו עיר בנה עמרי מלך ישראל?",options:["תרצה","שומרון","יזרעאל","בית אל"],correct:1,explanation:"עמרי קנה את ההר שמרון מאת שמר בככרים כסף ויקרא את שם העיר 'שמרון' על שם אדוני ההר."},
+    {q:"מה עשה אסא שמעיד על צדקתו?",options:["כרת ברית שלום עם בעשא","בנה מחדש את המקדש","העביר את הקדשים מן הארץ והסיר את כל הגילולים","החזיר את עשרת השבטים"],correct:2,explanation:"אסא 'ויעבר הקדשים מן הארץ ויסר את כל הגללים אשר עשו אבותיו'."}
+
 ],
 bagrutQuestions:[
 {q:"מה הן שתי העצות שקיבל רחבעם, איזו עצה לא קיבל ומדוע?",answer:'<p><strong>עצת הזקנים:</strong> "אם היום תהיה עבד לעם הזה ועבדתם" — הקשב לעם, הקל עליהם, ויעבדוך.</p><p><strong>עצת הילדים:</strong> "אבי יסר אתכם בשוטים ואני אייסר אתכם בעקרבים" — הכבד עוד יותר.</p><p><strong>לא קיבל:</strong> את עצת הזקנים. <strong>מדוע:</strong> "כי היתה סיבה מעם ה\'" — ה\' רצה לקיים את נבואת אחיה על קריעת הממלכה.</p>',source:'בגרות תשפ"ד, שאלה 2'},
@@ -937,8 +973,24 @@ americanQuestions:[
     {q:"מדוע סירב נבות למכור את כרמו לאחאב?",options:["כי שנא את אחאב","כי הכרם היה נחלת אבותיו — אסור למכור","כי רצה מחיר גבוה יותר","כי הנביא אסר עליו"],correct:1,explanation:'נבות אמר: "חלילה לי מה\' מתתי את נחלת אבותי לך" — סירוב מוסרי ודתי. נחלת אבות היא קדושה.'},
     {q:"כיצד תכננה איזבל להשיג את כרם נבות?",options:["קנתה אותו במחיר כפול","זימנה עדי שקר שהעידו שנבות קילל אלוקים ומלך","שלחה חיילים לגרשו","הרעילה את נבות"],correct:1,explanation:"איזבל כתבה מכתבים בשם אחאב, ציוותה על צום, הושיבה את נבות בראש העם, וזימנה שני 'בני בליעל' להעיד שקר."},
     {q:"מה עשה אחאב כשאליהו ניבא עליו עונש בכרם נבות?",options:["ניסה להרוג את אליהו","קרע בגדיו ולבש שק — חזר בתשובה חלקית","צחק ולא האמין","ברח למצרים"],correct:1,explanation:"אחאב קרע בגדיו, לבש שק על בשרו וצם — הכנעה שגרמה לה' לדחות את העונש לדור הבא."},
-    {q:"מה קרה למים כשאליהו הכה בהם באדרתו בירדן?",options:["הפכו לדם","נחלקו לשניים","עלו למעלה","קפאו"],correct:1,explanation:"אליהו לקח את אדרתו, גלל אותה והכה את המים — ונחלקו! אלישע עשה אותו נס אחרי עליית אליהו."}
-  
+    {q:"מה קרה למים כשאליהו הכה בהם באדרתו בירדן?",options:["הפכו לדם","נחלקו לשניים","עלו למעלה","קפאו"],correct:1,explanation:"אליהו לקח את אדרתו, גלל אותה והכה את המים — ונחלקו! אלישע עשה אותו נס אחרי עליית אליהו."},
+    // שאלות נוספות מיחידה 3 - מבוססות על שאלות חזרה מקובץ sheelot.pdf
+    {q:"מה עשה חיאל בית האלי וכיצד נענש?",options:["בנה את יריחו מחדש ונענש במות בניו","בנה עגל זהב והוכש","הקים מזבח הבעל בשומרון והוגלה","הרס מזבח ה' ונענש בצרעת"],correct:0,explanation:"חיאל בית האלי בנה את יריחו ונענש בקיום קללת יהושע: 'באבירם בכרו יסדה ובשגוב צעירו הציב דלתיה'."},
+    {q:"כיצד שרד אליהו בנחל כרית?",options:["העורבים הביאו לו לחם ובשר והוא שתה ממי הנחל","אלמנה מצרפת הביאה לו מים","עובדיהו החביא אותו במערה","ניזון מצמח רותם"],correct:0,explanation:"העורבים היו 'מביאים לו לחם ובשר בבקר ולחם ובשר בערב ומן הנחל ישתה'."},
+    {q:"מה הבטיח אליהו לאלמנה מצרפת?",options:["שכד הקמח לא תכלה וצפחת השמן לא תחסר עד שירד גשם","ששדה החיטה יצמיח יבול","שבנה לא ימות","שתמצא אוצר"],correct:0,explanation:"אליהו הבטיח: 'כד הקמח לא תכלה וצפחת השמן לא תחסר עד יום תת ה' גשם על פני האדמה'."},
+    {q:"מה קרה לבן האלמנה מצרפת וכיצד פעל אליהו?",options:["הילד חלה ומת ואליהו התפלל והחיה אותו","הילד נלקח לעבדות ואליהו פדה אותו","הילד ננשך על ידי נחש","הילד הלך לאיבוד"],correct:0,explanation:"לאחר שהילד מת, אליהו התפלל אל ה': 'ותשב נפש הילד על קרבו ויחי'."},
+    {q:"מדוע חשש עובדיה להודיע לאחאב שאליהו נמצא?",options:["פחד שרוח ה' תישא את אליהו וכשאחאב לא ימצאנו יהרגו","ידע שאחאב מתכנן להרוג שריו","רצה להגן על אליהו","היה נאמן לאיזבל"],correct:0,explanation:"עובדיה חשש: 'ורוח ה' ישאך על אשר לא אדע', ואם המלך לא ימצא את אליהו — הוא יהרוג את עובדיה."},
+    {q:"במה האשים אחאב את אליהו כשנפגשו?",options:["קרא לו 'עוכר ישראל' ואליהו השיב שאחאב ובית אביו הם עוכרי ישראל","האשימו במרידה","האשימו בהרג נביאי הבעל","האשימו בבריחה"],correct:0,explanation:"אחאב קורא לאליהו 'עוכר ישראל', ואליהו משיב: 'לא עכרתי את ישראל כי אם אתה ובית אביך בעזבכם את מצות ה''."},
+    {q:"מהו המבחן שהציע אליהו במעמד הר הכרמל?",options:["האל שיענה באש מן השמיים הוא האלוקים","האל שיוריד גשם הוא האלוקים","האל שירפא חולים הוא האלוקים","מי שיחצה את הנחל הוא נביא"],correct:0,explanation:"אליהו מציע: 'והיה האלהים אשר יענה באש הוא האלהים'."},
+    {q:"מה גרם לעם לומר 'ה' הוא האלוקים' בהר הכרמל?",options:["אש ה' נפלה ואכלה את העולה, העצים, האבנים והמים","אליהו החיה אדם מת","החל לרדת גשם","נביאי הבעל התוודו"],correct:0,explanation:"'ותפל אש ה' ותאכל את העלה... ואת המים אשר בתעלה לחכה' — בעקבות הנס העם קרא 'ה' הוא האלוהים'."},
+    {q:"כיצד הגיבה איזבל לאחר מעמד הר הכרמל?",options:["נשבעה להרוג את אליהו תוך יממה","הסכימה להרוס מזבחות הבעל","פקדה לאסור את אליהו","ברחה לצידון"],correct:0,explanation:"איזבל מאיימת: 'כה יעשון אלהים וכה יוספון כי כעת מחר אשים את נפשך כנפש אחד מהם'."},
+    {q:"אילו שלושה אנשים נצטווה אליהו למשוח בהר חורב?",options:["חזאל למלך ארם, יהוא למלך ישראל, ואלישע לנביא","בן הדד, אחזיה, ומיכיהו","עמרי, יהושפט, ועובדיה","רחבעם, ירבעם, ואחיה"],correct:0,explanation:"ה' ציווה על אליהו למשוח את חזאל, יהוא ואלישע כדי להמשיך את המאבק בעבודה הזרה."},
+    {q:"מדוע סירב נבות למכור את כרמו?",options:["'חלילה לי מה' מתתי את נחלת אבתי לך' — איסור דתי","דרש מחיר כפול","הכרם הוקדש לבית המקדש","רצה להעניק לבניו"],correct:0,explanation:"נבות מסרב משום שמדובר בנחלת אבותיו, ומכירת נחלה נחשבת לאסורה על פי חוקי התורה."},
+    {q:"כיצד פעלה איזבל כדי לרשת את כרם נבות?",options:["ביימה משפט בעזרת עדי שקר שהעידו ש'ברך נבות אלוהים ומלך' והוא נסקל","שלחה מתנקשים בלילה","שילמה סכום עתק","הגלתה את נבות"],correct:0,explanation:"איזבל שלחה ספרים לזקני העיר, העמידה שני בני בליעל שהעידו שקר, ונבות נסקל למוות."},
+    {q:"מה אמר אליהו לאחאב לאחר רצח נבות?",options:["'הרצחת וגם ירשת... במקום אשר לקקו הכלבים את דם נבות ילקקו הכלבים את דמך'","'תוגלה למצרים'","'כרם נבות יהיה לשממה'","'תרד אש מהשמיים ותשרוף את ארמונך'"],correct:0,explanation:"אליהו מאשים את אחאב ברצח ולקיחת הירושה ומנבא שדמו ילוקק על ידי כלבים."},
+    {q:"מה ביקש אלישע מאליהו ביום עלייתו בסערה?",options:["'ויהי נא פי שנים ברוחך אלי'","שיקבל את מטהו","שאליהו יתפלל עליו","שיעלה איתו בסערה"],correct:0,explanation:"אלישע מבקש 'פי שנים ברוחך' — רצון להיות יורשו המרכזי של אליהו בדומה לבכור הנוטל פי שניים."},
+    {q:"כיצד עלה אליהו לשמיים ומה הנס הראשון שעשה אלישע?",options:["רכב אש וסוסי אש הפרידו ביניהם ואליהו עלה בסערה, ואלישע חצה את הירדן באדרת אליהו","מלאכים נשאו אותו ואלישע ריפא מים","עורבים נשאו אותו ואלישע החיה ילד","אליהו נלקח באש ואלישע הוריד גשם"],correct:0,explanation:"'רכב אש וסוסי אש ויפרדו בין שניהם ויעל אליהו בסערה'. אלישע חצה את הירדן באדרת אליהו."}
+
 ],
 bagrutQuestions:[
 {q:"ה' ציווה על אליהו למנות שלושה. ציינו שניים מהם ותפקידם. איזה מינוי מימש אליהו ומה הייתה תגובת הממונה?",answer:"<p><strong>שלושת המינויים:</strong> 1. חזאל — למלך ארם. 2. יהוא בן נמשי — למלך ישראל. 3. אלישע בן שפט — לנביא.</p><p><strong>מימש:</strong> אלישע — מצא אותו חורש עם 12 צמדי בקר, השליך עליו את אדרתו.</p><p><strong>תגובת אלישע:</strong> ביקש להיפרד מהוריו, טבח את הבקר, בישל את הבשר, והלך אחרי אליהו.</p>",source:'בגרות תשפ"ד, שאלה 3'},
@@ -1028,8 +1080,19 @@ americanQuestions:[
     {q:"כיצד הערים יהוא על עובדי הבעל?",options:["שלח נביאים","הכריז שרוצה לעבוד את הבעל 'הרבה' וכינס את כולם","הבטיח שלום","שלח מתנות"],correct:1,explanation:"יהוא הכריז שרוצה לעבוד את הבעל יותר מאחאב, כינס את כל עובדיו לבית הבעל — והרג את כולם."},
     {q:"מי הציל את יואש התינוק מעתליה?",options:["יהוידע הכהן","יהושבע אחות אחזיהו","אלישע","נביא אלמוני"],correct:1,explanation:"יהושבע, אחות אחזיהו, גנבה את יואש מתוך בני המלך המומתים והסתירה אותו עם מינקתו בבית ה' שש שנים."},
     {q:"כיצד מימן יואש את שיפוץ המקדש?",options:["ממסים","ארון עם חור ליד המזבח לאיסוף תרומות","ממכירת אוצרות","מעזרת חירם"],correct:1,explanation:"יואש שם ארון עם חור במכסהו ליד המזבח — הכהנים ונותני המקדש שמו בו כסף, ומשם מומנו התיקונים."},
-    {q:"מה היה משל החוח והארז?",options:["על חכמה וטיפשות","חוח רצה להתחתן עם בת ארז — וחיה דרסה אותו","על עץ שנפל","על פרח שגדל"],correct:1,explanation:"מלך ישראל אמר לאמציהו: החוח (אתה) ביקש מהארז (אני) את בתו — וחיית שדה דרסה את החוח. אל תתגרה בחזק ממך."}
-  
+    {q:"מה היה משל החוח והארז?",options:["על חכמה וטיפשות","חוח רצה להתחתן עם בת ארז — וחיה דרסה אותו","על עץ שנפל","על פרח שגדל"],correct:1,explanation:"מלך ישראל אמר לאמציהו: החוח (אתה) ביקש מהארז (אני) את בתו — וחיית שדה דרסה את החוח. אל תתגרה בחזק ממך."},
+    // שאלות נוספות מיחידה 5 - מבוססות על שאלות חזרה מקובץ sheelot.pdf
+    {q:"מי ציווה למשוח את יהוא למלך ומי ביצע בפועל?",options:["ה' ציווה את אליהו אך נער מבני הנביאים בשליחות אלישע ביצע","אלישע ציווה את יהונדב","אחיה ציווה ויהוא משח עצמו","ה' התגלה ליהוא ישירות"],correct:0,explanation:"הציווי ניתן מאת ה' לאליהו, אך בפועל נער ששלח אלישע משח את יהוא למלך על ישראל."},
+    {q:"כיצד מצא יהורם מלך ישראל את מותו?",options:["ברח להרים ונתפס","יצא לקראת יהוא, ניסה לנוס ויהוא ירה בו חץ","הכין צבא ונלחם","נרצח על ידי שומרי ראשו"],correct:1,explanation:"יהורם יצא לקראת יהוא ושאל 'השלום?'. כשניסה לברוח, יהוא פגע בו בחץ 'בין זרועיו'."},
+    {q:"מה עלה בגורלה של איזבל?",options:["הושלכה מהחלון, נרמסה, ונותרו ממנה רק הגולגולת, הרגליים וכפות הידיים","ברחה לצידון","נהרגה בקרב","הוגלה לבבל"],correct:0,explanation:"איזבל הושלכה מהחלון ונרמסה. כלבים אכלו אותה ונותרו רק 'הגולגולת והרגליים וכפות הידיים'."},
+    {q:"מי הצטרף ליהוא במאבק בעבודת הבעל?",options:["אליהו","עובדיהו","יהונדב בן רכב","אמציה"],correct:2,explanation:"יהונדב בן רכב הצטרף ליהוא במרכבתו ושיתף עמו במסע להשמדת פולחן הבעל."},
+    {q:"כיצד הערים יהוא על עובדי הבעל?",options:["הכריז שיעבוד הבעל הרבה, כינס אותם לבית הבעל באמתלת זבח, והרג אותם","אתגר אותם בהר הכרמל","הזמינם למשתה והרעיל","הבטיח חסינות וארב להם"],correct:0,explanation:"יהוא הכריז 'אחאב עבד את הבעל מעט, יהוא יעבדנו הרבה', וכשנאספו לבית הבעל חיסל אותם."},
+    {q:"מה הציע אמציה ליהואש וכיצד הגיב יהואש?",options:["הציע ברית ויהואש סירב","התגרה בו למלחמה ויהואש השיב במשל 'החוח והארז'","הציע איחוד ויהואש הסכים","סירב להעלות מס"],correct:1,explanation:"אמציה התגרה ביהואש למלחמה. יהואש לעג לו דרך המשל על החוח שהתנשא מול הארז ונרמס."},
+    {q:"מה היו תוצאות המלחמה של אמציה נגד יהואש?",options:["אמציה ניצח","יהודה ניגפה, אמציה נשבה, חומת ירושלים נפרצה ואוצרות המקדש נלקחו","תיקו","שתי הממלכות נחלשו"],correct:1,explanation:"יהודה ניגפה, אמציה נשבה, ויהואש פרץ חומה ולקח אוצרות מהמקדש ומבית המלך."},
+    {q:"מדוע עזר ה' לישראל בימי ירבעם בן יואש למרות חטאיו?",options:["כי חזר בתשובה","כי ה' ראה את עוניים ומצוקתם ולא רצה למחות שם ישראל","כי נביאים התפללו","כי כרת ברית שלום"],correct:1,explanation:"ההצלה נבעה מרחמי ה' שראה את עוניים ומצוקתם הביטחונית של ישראל."},
+    {q:"מה עשה חזקיהו בתחום הדתי-רוחני?",options:["הסיר את הבמות ושבר את 'נחש הנחושת' שהעם קיטר לו","בנה מזבח ארמי במקדש","החזיר עגלי זהב","ציווה להפסיק קורבנות"],correct:0,explanation:"חזקיהו ביצע רפורמות רוחניות: הסרת הבמות, שבירת המצבות וכיתות נחש הנחושת."},
+    {q:"מה הייתה מטרת נאום רבשקה ליד הבריכה העליונה?",options:["להחליש את רוח העם ולשכנעם להיכנע","לעודד מרד בחזקיהו","לדרוש מס נוסף","להזהיר מברית עם מצרים"],correct:0,explanation:"רבשקה השתמש בלוחמה פסיכולוגית ודיבר 'יהודית' כדי לעורר פחד ולשכנע להיכנע."}
+
 ],
 bagrutQuestions:[
 {q:"כתבו שלוש דוגמאות של נביא שנשלח למלך — מי המלך, מי הנביא ומה בישר.",answer:"<p><strong>1. אחיה השילוני → ירבעם:</strong> בישר שיקבל 10 שבטים (קריעת הממלכה).</p><p><strong>2. אליהו → אחאב</strong> (בכרם נבות): 'הרצחת וגם ירשת' — עונש לבית אחאב.</p><p><strong>3. יהוא בן חנני → בעשא:</strong> ביתו יוכרת כבית ירבעם.</p><p>דוגמאות נוספות: שמעיה → רחבעם (אל תילחם באחיך), ישעיהו → חזקיהו (אל תירא מסנחריב).</p>",source:'בגרות תשפ"ד, שאלה 10'}
@@ -1573,9 +1636,9 @@ const PODCAST_DATA={
 1:{title:'מלכות שלמה',icon:'👑',desc:'המלכת שלמה, בניית המקדש וחטאי הזקנה',audio:`${PODCAST_BUCKET_URL}/unit-1.mp3`,mindmap:'generated/mindmaps/unit-1.json',summary:'generated/summaries/unit-1.txt'},
 2:{title:'פילוג הממלכה',icon:'⚔️',desc:'רחבעם וירבעם — הפיצול שלא נרפא',audio:`${PODCAST_BUCKET_URL}/unit-2.mp3`,mindmap:'generated/mindmaps/unit-2.json',summary:'generated/summaries/unit-2.txt'},
 3:{title:'אליהו ואחאב',icon:'🔥',desc:'הנביא מול המלך — מעמד הכרמל',audio:`${PODCAST_BUCKET_URL}/unit-3.mp3`,mindmap:'generated/mindmaps/unit-3.json',summary:'generated/summaries/unit-3.txt'},
-4:{title:'מהפכות ותמורות',icon:'🌀',desc:'אלישע, יהוא ומהפכות השלטון',audio:`${PODCAST_BUCKET_URL}/unit-4.mp3`,mindmap:'generated/mindmaps/unit-4.json',summary:'generated/summaries/unit-4.txt'},
-5:{title:'חזקיהו ושנחריב',icon:'🛡️',desc:'הצלת ירושלים וקידוש השם',audio:`${PODCAST_BUCKET_URL}/unit-5.mp3`,mindmap:'generated/mindmaps/unit-5.json',summary:'generated/summaries/unit-5.txt'},
-6:{title:'יאשיהו וחורבן',icon:'💔',desc:'הרפורמה האחרונה וחורבן בית ראשון',audio:`${PODCAST_BUCKET_URL}/unit-6.mp3`,mindmap:'generated/mindmaps/unit-6.json',summary:'generated/summaries/unit-6.txt'},
+4:{title:'מהפכות ותמורות',icon:'🌀',desc:'אלישע, יהוא ומהפכות השלטון',audio:null,mindmap:'generated/mindmaps/unit-4.json',summary:'generated/summaries/unit-4.txt'},
+5:{title:'חזקיהו ושנחריב',icon:'🛡️',desc:'הצלת ירושלים וקידוש השם',audio:null,mindmap:'generated/mindmaps/unit-5.json',summary:'generated/summaries/unit-5.txt'},
+6:{title:'יאשיהו וחורבן',icon:'💔',desc:'הרפורמה האחרונה וחורבן בית ראשון',audio:null,mindmap:'generated/mindmaps/unit-6.json',summary:'generated/summaries/unit-6.txt'},
 full:{title:'ספר מלכים — סיכום מקיף',icon:'📖',desc:'שיחה מקיפה על כל ספר מלכים',audio:`${PODCAST_BUCKET_URL}/full-tanach.mp3`,mindmap:null,summary:null}
 };
 // ========== GLOSSARY ==========
@@ -2232,14 +2295,14 @@ msg.textContent='החומר נוסף!';msg.classList.add('success');document.get
 async function toggleMaterialActive(id,active){await sb.from('teacher_materials').update({is_active:active}).eq('id',id);renderDashMaterials();}
 async function deleteTeacherMaterial(id){if(!confirm('למחוק את החומר?'))return;await sb.from('teacher_materials').delete().eq('id',id);renderDashMaterials();}
 // ========== STUDENT-SIDE: ANNOUNCEMENTS + MATERIALS ==========
-async function loadStudentAnnouncements(){const el=document.getElementById('studentAnnouncements');if(!el||currentProfile?.role==='teacher')return;
+async function loadStudentAnnouncements(){const el=document.getElementById('studentAnnouncements');if(!el||currentProfile?.role==='teacher'||isGuest){if(el)el.style.display='none';return;}
 const{data:anns}=await sb.from('announcements').select('*').eq('is_active',true).order('is_pinned',{ascending:false}).order('created_at',{ascending:false}).limit(5);
 if(!anns||anns.length===0){el.style.display='none';return;}
 el.style.display='block';let h='<h4 style="margin-bottom:.8rem;color:var(--secondary)"><i class="bi bi-megaphone"></i> הודעות מהמורה</h4>';
 anns.forEach(a=>{const d=new Date(a.created_at).toLocaleDateString('he-IL');const cls=a.priority==='urgent'?'urgent':a.priority==='important'?'important':'';
 h+=`<div class="student-announcement-banner ${cls}"><strong>${a.title}</strong> ${a.is_pinned?'<i class="bi bi-pin-angle-fill" style="color:var(--secondary)"></i>':''}<span style="float:left;font-size:.78rem;color:var(--text-light)">${d}</span><p style="margin:.4rem 0 0;font-size:.9rem">${a.body}</p></div>`;});
 el.innerHTML=h;}
-async function loadTeacherMaterials(){const el=document.getElementById('teacherMaterialsList');if(!el)return;
+async function loadTeacherMaterials(){const el=document.getElementById('teacherMaterialsList');if(!el){return;}if(isGuest){el.innerHTML='';return;}
 const{data:mats}=await sb.from('teacher_materials').select('*').eq('is_active',true).order('created_at',{ascending:false});
 if(!mats||mats.length===0){el.innerHTML='';return;}
 const typeIcons={pdf:'bi-file-pdf',video:'bi-play-circle',link:'bi-link-45deg',document:'bi-file-text',other:'bi-file-earmark'};
@@ -2339,7 +2402,7 @@ h+=`<section id="unit-${u.id}" class="section"><div class="container py-3">
 <button class="sub-tab" onclick="showSubTab(${u.id},'bagrut',this)">📝 בגרות <span class="badge-count">${bLen}</span></button>
 <button class="sub-tab" onclick="showSubTab(${u.id},'map',this)">🗺️ מפות</button>
 ${FLASHCARDS[u.id]?`<button class="sub-tab" onclick="showSubTab(${u.id},'flashcards',this)">🃏 כרטיסיות</button>`:''}
-${PODCAST_DATA[u.id]?`<button class="sub-tab" onclick="showSubTab(${u.id},'podcast',this)">🎧 פודקאסט</button>`:''}
+${PODCAST_DATA[u.id]?`<button class="sub-tab" onclick="showSubTab(${u.id},'ai',this)">🤖 AI</button>`:''}
 <a href="${encodeURIComponent(`יחידה${u.id}.pdf`)}" target="_blank" rel="noopener" class="sub-tab" style="text-decoration:none;color:inherit;pointer-events:auto;cursor:pointer" title="הורד יחידה ${u.id} כ-PDF">📥 הורדת PDF</a>
 </div>
 <div id="unit${u.id}-content" class="sub-content active">${renderContentPages(u)}</div>
@@ -2347,7 +2410,7 @@ ${PODCAST_DATA[u.id]?`<button class="sub-tab" onclick="showSubTab(${u.id},'podca
 <div id="unit${u.id}-bagrut" class="sub-content">${u.bagrutQuestions?renderBagrut(u):''}</div>
 <div id="unit${u.id}-map" class="sub-content">${u.mapLocations?renderMapSection(u):''}</div>
 ${FLASHCARDS[u.id]?`<div id="unit${u.id}-flashcards" class="sub-content"></div>`:''}
-${PODCAST_DATA[u.id]?`<div id="unit${u.id}-podcast" class="sub-content"></div>`:''}
+${PODCAST_DATA[u.id]?`<div id="unit${u.id}-ai" class="sub-content"></div>`:''}
 </div></section>`;
 });
 document.getElementById('unitSections').innerHTML=h;
@@ -2384,20 +2447,31 @@ function renderPodcasts(){
 let h='';
 for(const[key,p]of Object.entries(PODCAST_DATA)){
 const isFull=key==='full';
-h+=`<div class="podcast-card${isFull?' podcast-full-card':''}">
-${isFull?'<span class="pc-badge">🌟 מיוחד</span>':''}
+if(isFull&&!p.audio)continue;
+if(isFull){
+h+=`<div class="podcast-card podcast-full-card">
+<span class="pc-badge">🌟 מיוחד</span>
 <div class="pc-header">
 <div class="pc-icon">${p.icon}</div>
-<div><div class="pc-title">${isFull?'':'יחידה '+key+': '}${p.title}</div>
+<div><div class="pc-title">${p.title}</div>
 <div class="pc-subtitle">${p.desc}</div></div></div>
 <audio controls preload="none" src="${p.audio}" style="width:100%">הדפדפן שלך לא תומך בנגן שמע.</audio>
-${!isFull?`<div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap">
-<button class="hint-btn" onclick="togglePodcastExtra('mm-${key}','mindmap',${key})"><i class="bi bi-diagram-3"></i> מפת חשיבה</button>
-<button class="hint-btn" onclick="togglePodcastExtra('sum-${key}','summary',${key})"><i class="bi bi-card-text"></i> סיכום AI</button>
+</div>`;
+}else{
+h+=`<div class="podcast-card">
+<div class="pc-header">
+<div class="pc-icon">${p.icon}</div>
+<div><div class="pc-title">יחידה ${key}: ${p.title}</div>
+<div class="pc-subtitle">${p.desc}</div></div></div>
+${p.audio?`<audio controls preload="none" src="${p.audio}" style="width:100%">הדפדפן שלך לא תומך בנגן שמע.</audio>`:''}
+<div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap">
+${p.mindmap?`<button class="hint-btn" onclick="togglePodcastExtra('mm-${key}','mindmap',${key})"><i class="bi bi-diagram-3"></i> מפת חשיבה</button>`:''}
+${p.summary?`<button class="hint-btn" onclick="togglePodcastExtra('sum-${key}','summary',${key})"><i class="bi bi-card-text"></i> סיכום AI</button>`:''}
 </div>
 <div id="mm-${key}" style="display:none;margin-top:.8rem"></div>
-<div id="sum-${key}" style="display:none;margin-top:.8rem"></div>`:''}
+<div id="sum-${key}" style="display:none;margin-top:.8rem"></div>
 </div>`;
+}
 }
 document.getElementById('podcastGrid').innerHTML=h;
 }
@@ -2425,7 +2499,7 @@ if(!_podcastCache[cacheKey]){
 const r=await fetch(p.summary);
 _podcastCache[cacheKey]=await r.text();
 }
-el.innerHTML='<div class="ai-summary">'+_podcastCache[cacheKey]+'</div>';
+el.innerHTML='<div class="ai-summary">'+markdownToHtml(_podcastCache[cacheKey])+'</div>';
 }else{
 el.innerHTML='<p style="color:var(--text-light);text-align:center">התוכן עדיין לא נוצר. הפעל את generate-content.py ליצירת תוכן.</p>';
 }
@@ -2435,6 +2509,21 @@ el.innerHTML='<p style="color:var(--text-light);text-align:center">התוכן ע
 }
 function renderMindMap(data){
 if(!data||typeof data!=='object')return '<p style="color:var(--text-light)">אין מפת חשיבה זמינה</p>';
+// Normalize NotebookLM format {mind_map:{name,children}} to our render tree
+function normalizeNode(node){
+if(typeof node==='string')return node;
+if(node.mind_map)return normalizeNode(node.mind_map);
+if(node.name!==undefined){
+if(node.children&&node.children.length>0){
+const obj={};
+obj[node.name]=node.children.map(c=>normalizeNode(c));
+return obj;
+}
+return node.name;
+}
+return node;
+}
+const normalized=normalizeNode(data);
 function renderNode(node,depth){
 if(typeof node==='string')return `<div class="mindmap-node mindmap-leaf">${node}</div>`;
 let h='';
@@ -2446,7 +2535,10 @@ h+=`<div class="mindmap-node" style="background:var(--primary-light);color:var(-
 }
 if(Array.isArray(val)){
 h+='<div class="mindmap-branch">';
-val.forEach(item=>{h+=renderNode(item,depth+1);});
+val.forEach(item=>{
+if(typeof item==='string')h+=`<div class="mindmap-node mindmap-leaf">${item}</div>`;
+else h+=renderNode(item,depth+1);
+});
 h+='</div>';
 }else if(typeof val==='object'&&val!==null){
 h+='<div class="mindmap-branch">'+renderNode(val,depth+1)+'</div>';
@@ -2456,7 +2548,25 @@ h+=`<div class="mindmap-branch"><div class="mindmap-node mindmap-leaf">${val}</d
 }
 return h;
 }
-return renderNode(data,0);
+return renderNode(normalized,0);
+}
+function markdownToHtml(md){
+if(!md)return '';
+return md
+.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+.replace(/^### (.+)$/gm,'<h4>$1</h4>')
+.replace(/^## (.+)$/gm,'<h3>$1</h3>')
+.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+.replace(/^\d+\.\s+(.+)$/gm,'<li>$1</li>')
+.replace(/^\* (.+)$/gm,'<li>$1</li>')
+.replace(/(<li>.*<\/li>\n?)+/g,m=>'<ul>'+m+'</ul>')
+.replace(/\n{2,}/g,'</p><p>')
+.replace(/\n/g,'<br>')
+.replace(/^/,'<p>').replace(/$/,'</p>')
+.replace(/<p><(h[34]|ul|ol)/g,'<$1')
+.replace(/<\/(h[34]|ul|ol)><\/p>/g,'</$1>')
+.replace(/<p><\/p>/g,'')
+.replace(/\[(\d+(?:[-,\s]*\d+)*)\]/g,'<sup class="ref">[$1]</sup>');
 }
 function renderContentPages(u){
 let h='<div id="pages-'+u.id+'">';
@@ -2740,10 +2850,27 @@ if(id==='materials')loadTeacherMaterials();
 if(id.startsWith('unit-'))logActivity('page_view',{unit:id});
 }
 function showSubTab(uid,tab,btn){
-['content','quiz','bagrut','map','flashcards','podcast'].forEach(t=>{const el=document.getElementById(`unit${uid}-${t}`);if(el)el.classList.toggle('active',t===tab);});
+['content','quiz','bagrut','map','flashcards','podcast','ai'].forEach(t=>{const el=document.getElementById(`unit${uid}-${t}`);if(el)el.classList.toggle('active',t===tab);});
 if(btn){btn.closest('.sub-tabs').querySelectorAll('.sub-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 if(tab==='flashcards')renderFlashcards(uid);
 if(tab==='podcast')renderUnitPodcast(uid);
+if(tab==='ai')renderUnitAI(uid);
+}
+function renderUnitAI(uid){
+const el=document.getElementById(`unit${uid}-ai`);
+if(!el||el.dataset.rendered)return;
+el.dataset.rendered='1';
+const p=PODCAST_DATA[uid];
+if(!p){el.innerHTML='<p style="color:var(--text-light)">אין תוכן AI זמין ליחידה זו.</p>';return;}
+el.innerHTML=`<div style="padding:.5rem 0">
+<h3 style="color:var(--primary);margin-bottom:1rem"><i class="bi bi-stars"></i> תוכן AI — יחידה ${uid}: ${p.title}</h3>
+<div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem">
+${p.mindmap?`<button class="hint-btn" onclick="togglePodcastExtra('aimm-${uid}','mindmap',${uid})" style="font-size:.95rem;padding:.5rem 1rem"><i class="bi bi-diagram-3"></i> מפת חשיבה</button>`:''}
+${p.summary?`<button class="hint-btn" onclick="togglePodcastExtra('aisum-${uid}','summary',${uid})" style="font-size:.95rem;padding:.5rem 1rem"><i class="bi bi-card-text"></i> סיכום AI</button>`:''}
+</div>
+<div id="aimm-${uid}" style="display:none;margin-top:.8rem"></div>
+<div id="aisum-${uid}" style="display:none;margin-top:.8rem"></div>
+</div>`;
 }
 function renderUnitPodcast(uid){
 const el=document.getElementById(`unit${uid}-podcast`);
