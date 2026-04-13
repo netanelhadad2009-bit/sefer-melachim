@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 700" dir="rtl">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D4E9F7"/>
+      <stop offset="100%" stop-color="#B8D8EE"/>
+    </linearGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8DCCA"/>
+      <stop offset="40%" stop-color="#F0E6D6"/>
+      <stop offset="100%" stop-color="#F5E6C8"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity=".15"/>
+    </filter>
+    <radialGradient id="kinneret">
+      <stop offset="0%" stop-color="#8EC5E0"/>
+      <stop offset="100%" stop-color="#6BA8D0"/>
+    </radialGradient>
+    <radialGradient id="deadsea">
+      <stop offset="0%" stop-color="#7BB5D0"/>
+      <stop offset="100%" stop-color="#5A9ABF"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background sea -->
+  <rect width="400" height="700" fill="url(#sea)" rx="16"/>
+
+  <!-- Land mass - Israel proper shape -->
+  <path d="
+    M145,25 L160,22 L180,25 L200,32 L218,45 L228,60 L235,80
+    L232,95 L225,108 L218,118 L210,128 L200,140
+    L192,152 L185,165 L182,178 L185,192 L190,208
+    L192,222 L188,238 L182,255 L175,272
+    L168,290 L162,308 L158,328 L160,348
+    L165,368 L172,388 L178,408 L182,428
+    L180,448 L172,468 L162,488 L150,510
+    L140,535 L132,558 L128,578 L125,598
+    L122,620 L118,640 L112,658 L108,668
+    L105,660 L100,645 L95,625 L90,605
+    L85,582 L82,558 L80,535 L78,510
+    L76,488 L78,465 L82,442 L86,420
+    L90,400 L92,380 L90,358 L86,338
+    L82,318 L78,298 L75,278 L72,258
+    L70,238 L72,218 L76,198 L80,180
+    L84,162 L86,145 L84,128 L80,112
+    L78,95 L80,78 L84,62 L90,48 L100,35
+    L115,28 L130,25 Z
+  " fill="url(#land)" stroke="#B8A88A" stroke-width="2" filter="url(#shadow)"/>
+
+  <!-- Golan / East bank area -->
+  <path d="
+    M228,60 L248,55 L260,65 L265,85 L260,108 L250,128
+    L240,148 L235,168 L232,188 L228,200 L225,208
+    L218,200 L212,188 L210,170 L215,152 L220,135
+    L225,118 L232,95 Z
+  " fill="#DDD0BC" stroke="#B8A88A" stroke-width="1.5"/>
+
+  <!-- Sinai hint -->
+  <path d="
+    M108,668 L120,665 L135,650 L155,625 L170,610 L185,600
+    L170,620 L150,645 L130,665 L108,668 Z
+  " fill="#E8DCCA" stroke="#B8A88A" stroke-width="1" opacity=".5"/>
+
+  <!-- Sea of Galilee / כנרת -->
+  <ellipse cx="228" cy="130" rx="12" ry="18" fill="url(#kinneret)" stroke="#5A9ABF" stroke-width="1"/>
+  <text x="252" y="135" font-family="Assistant,sans-serif" font-size="11" fill="#4A8AB0" font-weight="600">כנרת</text>
+
+  <!-- Dead Sea / ים המלח -->
+  <ellipse cx="218" cy="365" rx="10" ry="42" fill="url(#deadsea)" stroke="#5A9ABF" stroke-width="1"/>
+  <text x="236" y="370" font-family="Assistant,sans-serif" font-size="10" fill="#4A8AB0" font-weight="600">ים המלח</text>
+
+  <!-- Jordan River / ירדן -->
+  <path d="M226,148 Q230,180 228,210 Q225,250 222,290 Q220,320 218,345"
+        fill="none" stroke="#6BA8D0" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="242" y="250" font-family="Assistant,sans-serif" font-size="9" fill="#6BA8D0" font-weight="500" opacity=".7">ירדן</text>
+
+  <!-- Gulf of Eilat -->
+  <path d="M118,640 L125,650 L130,665 L125,670 L118,665 L112,658 Z"
+        fill="#8EC5E0" stroke="#5A9ABF" stroke-width="1"/>
+
+  <!-- Mediterranean label -->
+  <text x="42" y="300" font-family="Assistant,sans-serif" font-size="14" fill="#6BA8D0" font-weight="700"
+        transform="rotate(-90,42,300)" opacity=".5">הים התיכון</text>
+
+  <!-- Region labels (subtle) -->
+  <text x="160" y="110" font-family="Assistant,sans-serif" font-size="12" fill="#B8A88A" font-weight="600" opacity=".4">גליל</text>
+  <text x="145" y="250" font-family="Assistant,sans-serif" font-size="12" fill="#B8A88A" font-weight="600" opacity=".4">שומרון</text>
+  <text x="130" y="400" font-family="Assistant,sans-serif" font-size="12" fill="#B8A88A" font-weight="600" opacity=".4">יהודה</text>
+  <text x="105" y="550" font-family="Assistant,sans-serif" font-size="12" fill="#B8A88A" font-weight="600" opacity=".4">נגב</text>
+</svg>

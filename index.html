@@ -5047,40 +5047,36 @@ let h=`<div class="game-area">
 <div class="score-bar"><span>שאלה ${gameState.current+1} / ${gameState.total}</span><span id="gameTimer" style="font-family:monospace">${formatTime(gameState.seconds)}</span><span>⭐ ${gameState.score}/${gameState.current}</span></div>
 <div style="height:4px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden"><div style="height:100%;background:var(--primary);width:${(gameState.current/gameState.total)*100}%;transition:width .4s ease;border-radius:2px"></div></div>`;
 if(t==='map'){
-// Map game — region-based visual layout with big location buttons
-const regionMap={
-"צור":"צפון","צרפת":"צפון","דן":"צפון","חצור":"צפון","עכו":"צפון",
-"הר הכרמל":"צפון","נחל קישון":"צפון","מגידו":"צפון","יזרעאל":"צפון",
-"שכם":"מרכז","שומרון":"מרכז","תרצה":"מרכז","פנואל":"מרכז","נחל כרית":"מרכז",
-"בית אל":"מרכז","הרמה":"מרכז","גבעון":"מרכז","גזר":"מרכז","יפו":"מרכז",
-"ירושלים":"ירושלים","מעיין הגיחון":"ירושלים","ערבות יריחו":"ירושלים",
-"לכיש":"דרום","באר שבע":"דרום","עציון גבר":"דרום","אילת":"דרום","הר חורב":"דרום",
-"דמשק":"חוץ","נינוה":"חוץ","בבל":"חוץ"
+// Visual map game — real map with clickable pin overlays
+const pinPos={
+"ירושלים":{x:48,y:51},"מעיין הגיחון":{x:49,y:51.5},"גבעון":{x:46,y:49},
+"עציון גבר":{x:35,y:92},"צור":{x:37,y:10},"צרפת":{x:38,y:9},
+"חצור":{x:53,y:17},"מגידו":{x:42,y:22},"גזר":{x:40,y:49},
+"שכם":{x:48,y:35},"דן":{x:55,y:10},"בית אל":{x:48,y:45},
+"שומרון":{x:44,y:33},"פנואל":{x:60,y:35},"תרצה":{x:49,y:30},
+"הרמה":{x:47,y:47},"הר הכרמל":{x:36,y:22},"נחל כרית":{x:58,y:38},
+"באר שבע":{x:38,y:64},"הר חורב":{x:32,y:95},"יזרעאל":{x:46,y:24},
+"נחל קישון":{x:38,y:23},"לכיש":{x:37,y:55},"נינוה":{x:85,y:5},
+"בבל":{x:88,y:15},"דמשק":{x:68,y:10},"ערבות יריחו":{x:55,y:52},
+"עכו":{x:35,y:18},"יפו":{x:30,y:41},"אילת":{x:34,y:93}
 };
-const regionLabels={"צפון":"🏔️ צפון הארץ","מרכז":"🏘️ מרכז הארץ","ירושלים":"🏛️ אזור ירושלים","דרום":"🏜️ דרום הארץ","חוץ":"🌍 מחוץ לארץ"};
-const regionColors={"צפון":"#2E7D32","מרכז":"#1565C0","ירושלים":"#D4721A","דרום":"#C62828","חוץ":"#6A1B9A"};
-h+=`<div class="game-question" style="margin-bottom:.3rem">🗺️ איפה נמצא המקום?</div>
-<p style="text-align:center;font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:1rem;line-height:1.6">"${q.desc}"</p>`;
-// Group options by region and render as a visual map layout
-const optsByRegion={};
-q.options.forEach(opt=>{const r=regionMap[opt]||'מרכז';if(!optsByRegion[r])optsByRegion[r]=[];optsByRegion[r].push(opt);});
-const regionOrder=["צפון","מרכז","ירושלים","דרום","חוץ"];
-h+=`<div style="max-width:400px;margin:0 auto">`;
-regionOrder.forEach(r=>{
-if(!optsByRegion[r])return;
-const color=regionColors[r];
-h+=`<div style="margin-bottom:.4rem">
-<div style="font-size:.7rem;font-weight:700;color:${color};padding:.1rem .5rem;opacity:.7">${regionLabels[r]}</div>
-<div style="display:flex;gap:.4rem;flex-wrap:wrap">`;
-optsByRegion[r].forEach(opt=>{
-h+=`<button class="game-opt" style="flex:1;min-width:120px;border-color:${color}30;position:relative;padding:.8rem .5rem" onclick="checkGameAns('${opt.replace(/'/g,"\\'")}',this)" data-name="${opt}">
-<span style="font-size:1.2rem;display:block;margin-bottom:.2rem">📍</span>
-<span style="font-weight:700;font-size:.95rem">${opt}</span>
+h+=`<div class="game-question" style="margin-bottom:.5rem">🗺️ לחצו על המקום הנכון במפה!</div>
+<p style="text-align:center;font-size:1.05rem;font-weight:700;color:var(--primary);margin-bottom:.8rem;line-height:1.6">"${q.desc}"</p>
+<div id="mapContainer" style="position:relative;max-width:400px;margin:0 auto;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg);border:2px solid var(--border)">
+<img src="images/israel_map.svg" alt="מפת ארץ ישראל" style="width:100%;display:block" onerror="this.style.display='none'">`;
+q.options.forEach(opt=>{
+const p=pinPos[opt];
+if(!p)return;
+h+=`<button onclick="checkMapClick('${opt.replace(/'/g,"\\'")}',this)" data-name="${opt}" style="
+position:absolute;left:${p.x}%;top:${p.y}%;transform:translate(-50%,-100%);
+background:none;border:none;cursor:pointer;padding:0;z-index:2;transition:.2s;
+display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))">
+<span style="font-size:.7rem;font-weight:800;color:#fff;background:var(--primary);padding:.15rem .5rem;border-radius:10px;white-space:nowrap;margin-bottom:2px">${opt}</span>
+<svg width="20" height="28" viewBox="0 0 20 28"><path d="M10,0C4.5,0,0,4.5,0,10c0,7.5,10,18,10,18s10-10.5,10-18C20,4.5,15.5,0,10,0z" fill="var(--primary)"/><circle cx="10" cy="10" r="4" fill="#fff"/></svg>
 </button>`;
 });
-h+=`</div></div>`;
-});
-h+=`</div>`;
+h+=`</div>
+<p style="text-align:center;color:var(--text-light);font-size:.8rem;margin-top:.5rem">לחצו על הסיכה של המקום הנכון</p>`;
 }else if(t==='quotes'){
 // Scroll/quote reveal style
 h+=`<div style="text-align:center;margin-bottom:1.5rem">
@@ -5096,6 +5092,33 @@ h+='</div>';
 }
 h+='<div id="gameFb" style="margin-top:.8rem"></div></div>';
 area.innerHTML=h;
+}
+function checkMapClick(name,btn){
+const q=gameState.questions[gameState.current];
+const correct=q.answer;
+const container=document.getElementById('mapContainer');
+container.querySelectorAll('button').forEach(b=>{
+b.disabled=true;b.style.pointerEvents='none';
+const n=b.getAttribute('data-name');
+const pin=b.querySelector('svg path');
+const label=b.querySelector('span');
+if(n===correct){
+if(pin)pin.setAttribute('fill','#4CAF7D');
+if(label){label.style.background='#4CAF7D';label.style.transform='scale(1.2)';}
+b.style.transform='translate(-50%,-100%) scale(1.3)';
+}else{
+b.style.opacity='.35';
+if(pin)pin.setAttribute('fill','#999');
+}
+});
+const isCorrect=name===correct;
+if(isCorrect)gameState.score++;
+gameState.answers.push({q:q.desc,selected:name,correct,isCorrect});
+const fb=document.getElementById('gameFb');
+fb.innerHTML=isCorrect
+?`<div class="feedback show correct-fb" style="text-align:center"><strong>✓ נכון!</strong> ${correct}</div>`
+:`<div class="feedback show wrong-fb" style="text-align:center"><strong>✗</strong> התשובה: <strong>${correct}</strong></div>`;
+setTimeout(()=>{gameState.current++;if(gameState.current>=gameState.total)showGameResult();else renderGameQ(document.getElementById('gameArea'));},2000);
 }
 function checkGameAns(ans,btn){
 const q=gameState.questions[gameState.current];
