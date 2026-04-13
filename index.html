@@ -201,6 +201,71 @@ a{color:var(--secondary);text-decoration:none}
 .tip-card .tip-icon{font-size:1.5rem;flex-shrink:0}
 .tip-card p{margin:0;font-size:.88rem;line-height:1.6}
 .tip-card strong{color:var(--primary)}
+/* === LOGIN OVERLAY === */
+.login-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-box{background:var(--card);border-radius:var(--radius);padding:2.5rem 2rem;max-width:400px;width:100%;box-shadow:var(--shadow-lg);text-align:center}
+.login-box h2{color:var(--primary);margin-bottom:.3rem;font-size:1.6rem}
+.login-box .subtitle{color:var(--text-light);font-size:.9rem;margin-bottom:1.5rem}
+.login-box input{width:100%;padding:.7rem 1rem;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.95rem;background:var(--bg);color:var(--text);margin-bottom:.8rem;outline:none;transition:var(--transition)}
+.login-box input:focus{border-color:var(--primary)}
+.login-box .btn-login{width:100%;padding:.75rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:var(--transition)}
+.login-box .btn-login:hover{background:var(--primary-dark)}
+.login-box .btn-login:disabled{opacity:.6;cursor:not-allowed}
+.login-box .error-msg{color:var(--error);font-size:.85rem;margin-top:.5rem;min-height:1.2rem}
+.login-box .login-icon{font-size:3rem;margin-bottom:.5rem}
+/* === USER BADGE (NAVBAR) === */
+.user-badge{display:flex;align-items:center;gap:.4rem;padding:.3rem .7rem;border-radius:20px;background:var(--primary-light);color:var(--primary);font-weight:600;font-size:.82rem;border:1px solid var(--border);cursor:default}
+.user-badge i{font-size:.9rem}
+.btn-logout{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:.3rem .6rem;font-family:inherit;font-size:.78rem;color:var(--text-light);cursor:pointer;transition:var(--transition)}
+.btn-logout:hover{border-color:var(--error);color:var(--error)}
+/* === DASHBOARD / PROFILE SECTIONS === */
+.dash-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+.dash-header h2{color:var(--primary);margin:0;font-size:1.4rem}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;text-align:center}
+.stat-card .stat-num{font-size:2rem;font-weight:800;color:var(--primary);line-height:1}
+.stat-card .stat-label{font-size:.82rem;color:var(--text-light);margin-top:.3rem}
+.dash-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.dash-table th{background:var(--primary-light);color:var(--primary);padding:.7rem .8rem;text-align:right;font-weight:700;border-bottom:2px solid var(--border)}
+.dash-table td{padding:.65rem .8rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.dash-table tr:hover td{background:var(--bg2)}
+.dash-table .clickable{cursor:pointer}
+.dash-table .clickable:hover td{background:var(--primary-light)}
+.status-badge{display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.75rem;font-weight:600}
+.status-badge.active{background:var(--success-light);color:var(--success)}
+.status-badge.inactive{background:var(--error-light);color:var(--error)}
+.progress-mini{width:80px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:.4rem}
+.progress-mini .fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s}
+.dash-form{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
+.dash-form h3{margin:0 0 1rem;font-size:1.1rem;color:var(--primary)}
+.dash-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+.dash-form input,.dash-form select{width:100%;padding:.6rem .8rem;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.9rem;background:var(--bg);color:var(--text);outline:none;transition:var(--transition)}
+.dash-form input:focus,.dash-form select:focus{border-color:var(--primary)}
+.dash-form .btn-add{padding:.6rem 1.5rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-family:inherit;font-weight:700;cursor:pointer;transition:var(--transition)}
+.dash-form .btn-add:hover{background:var(--primary-dark)}
+.dash-form .btn-add:disabled{opacity:.6;cursor:not-allowed}
+.dash-form .form-msg{font-size:.85rem;margin-top:.5rem;min-height:1.2rem}
+.dash-form .form-msg.success{color:var(--success)}
+.dash-form .form-msg.error{color:var(--error)}
+.btn-action{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:.3rem .6rem;font-family:inherit;font-size:.78rem;cursor:pointer;transition:var(--transition);color:var(--text)}
+.btn-action:hover{border-color:var(--primary);color:var(--primary)}
+.btn-action.danger:hover{border-color:var(--error);color:var(--error)}
+.btn-back{background:none;border:none;color:var(--secondary);cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:600;padding:.3rem 0;display:flex;align-items:center;gap:.3rem}
+.btn-back:hover{text-decoration:underline}
+.detail-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem}
+.detail-card h4{margin:0 0 .8rem;font-size:1rem;color:var(--primary)}
+.profile-header{display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.profile-header .avatar{width:60px;height:60px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;flex-shrink:0}
+.profile-header .info h3{margin:0;font-size:1.2rem;color:var(--text)}
+.profile-header .info p{margin:.2rem 0 0;font-size:.85rem;color:var(--text-light)}
+.chart-bar-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.chart-bar-row .label{width:80px;font-size:.82rem;color:var(--text-light);text-align:left;flex-shrink:0}
+.chart-bar-row .bar{flex:1;height:20px;background:var(--border);border-radius:4px;overflow:hidden}
+.chart-bar-row .bar .fill{height:100%;border-radius:4px;transition:width .5s}
+.chart-bar-row .val{width:40px;font-size:.82rem;font-weight:700;color:var(--text);text-align:right}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-light)}
+.empty-state i{font-size:3rem;display:block;margin-bottom:.8rem;opacity:.4}
+.empty-state p{font-size:.95rem}
 /* === RESPONSIVE === */
 @media(max-width:576px){
 body{font-size:15px;padding-top:56px}
@@ -209,6 +274,9 @@ body{font-size:15px;padding-top:56px}
 .content-page{padding:1.1rem}
 .game-select{grid-template-columns:1fr 1fr}
 .quiz-q{padding:1rem}
+.dash-form .form-row{grid-template-columns:1fr}
+.dash-stats{grid-template-columns:1fr 1fr}
+.login-box{padding:1.5rem 1.2rem}
 }
 @media(min-width:992px){
 .content-page{padding:2rem}
@@ -216,10 +284,24 @@ body{font-size:15px;padding-top:56px}
 </style>
 </head>
 <body>
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay" class="login-overlay" style="display:none">
+<div class="login-box">
+<div class="login-icon">📖</div>
+<h2>ספר מלכים</h2>
+<p class="subtitle">התחבר כדי להמשיך ללמוד</p>
+<input type="email" id="loginEmail" placeholder="אימייל" dir="ltr" autocomplete="email">
+<input type="password" id="loginPassword" placeholder="סיסמא" dir="ltr" autocomplete="current-password">
+<button class="btn-login" id="loginBtn" onclick="handleLogin()">כניסה</button>
+<div class="error-msg" id="loginError"></div>
+</div>
+</div>
 <nav class="navbar navbar-expand-lg fixed-top">
 <div class="container-fluid">
 <a class="navbar-brand" href="#home" onclick="nav('home')"><i class="bi bi-book-half"></i> ספר מלכים</a>
 <div class="d-flex align-items-center gap-2 order-lg-last">
+<span id="userBadge" class="user-badge" style="display:none"><i class="bi bi-person-circle"></i> <span id="userBadgeName"></span></span>
+<button class="btn-logout" id="logoutBtn" style="display:none" onclick="handleLogout()">יציאה</button>
 <button class="theme-toggle" onclick="toggleTheme()" title="מצב לילה"><i class="bi bi-moon-stars" id="themeIcon"></i></button>
 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
 </div>
@@ -230,6 +312,8 @@ body{font-size:15px;padding-top:56px}
 <li class="nav-item"><a class="nav-link" href="#games" onclick="nav('games')"><i class="bi bi-controller"></i> משחקים</a></li>
 <li class="nav-item"><a class="nav-link" href="#summary" onclick="nav('summary')"><i class="bi bi-clipboard-data"></i> סיכום</a></li>
 <li class="nav-item"><a class="nav-link" href="#materials" onclick="nav('materials')"><i class="bi bi-file-earmark-pdf"></i> חומרי לימוד</a></li>
+<li class="nav-item" id="navProfile" style="display:none"><a class="nav-link" href="#student-profile" onclick="nav('student-profile')"><i class="bi bi-person"></i> הפרופיל שלי</a></li>
+<li class="nav-item" id="navDashboard" style="display:none"><a class="nav-link" href="#teacher-dashboard" onclick="nav('teacher-dashboard')"><i class="bi bi-speedometer2"></i> דשבורד</a></li>
 </ul></div></div></nav>
 <section id="home" class="section active">
 <div class="hero">
@@ -286,12 +370,39 @@ body{font-size:15px;padding-top:56px}
 <div class="row g-3" id="materialsGrid"></div>
 </div>
 </section>
+<!-- STUDENT PROFILE -->
+<section id="student-profile" class="section">
+<div class="container py-3">
+<div id="studentProfileContent"></div>
+</div>
+</section>
+<!-- TEACHER DASHBOARD -->
+<section id="teacher-dashboard" class="section">
+<div class="container py-3">
+<div class="dash-header">
+<h2><i class="bi bi-speedometer2"></i> דשבורד מורה</h2>
+</div>
+<div class="sub-tabs" id="dashTabs">
+<button class="sub-tab active" onclick="showDashTab('overview',this)">סקירת תלמידים</button>
+<button class="sub-tab" onclick="showDashTab('detail',this)">תלמיד בודד</button>
+<button class="sub-tab" onclick="showDashTab('stats',this)">סטטיסטיקות</button>
+<button class="sub-tab" onclick="showDashTab('manage',this)">ניהול תלמידים</button>
+<button class="sub-tab" onclick="showDashTab('export',this)">ייצוא</button>
+</div>
+<div id="dashOverview" class="dash-tab-content"></div>
+<div id="dashDetail" class="dash-tab-content" style="display:none"></div>
+<div id="dashStats" class="dash-tab-content" style="display:none"></div>
+<div id="dashManage" class="dash-tab-content" style="display:none"></div>
+<div id="dashExport" class="dash-tab-content" style="display:none"></div>
+</div>
+</section>
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bi bi-arrow-up"></i></button>
 <div class="confetti-container" id="confettiBox"></div>
 <footer style="text-align:center;padding:2rem 1rem;color:var(--text-light);font-size:.82rem;border-top:1px solid var(--border);margin-top:2rem">
 <p>אתר לימוד לתלמידי הרב ברק — מבוסס על חוברת משרד החינוך לספר מלכים</p>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ===== PLACEHOLDER: DATA WILL BE LOADED BELOW =====
 // Due to file size, the full data is embedded inline.
@@ -4807,12 +4918,521 @@ const TIPS=[
 "בית המקדש נבנה בשקט: 'מקבות והגרזן כל כלי ברזל לא נשמע' — קדושה נבנית בשקט.",
 "ירבעם כונה 'אשר החטיא את ישראל' — מנהיג שמחטיא אחרים, חטאו כפול."
 ];
+// ========== SUPABASE ==========
+const SUPABASE_URL='https://rdxaqsgylqchdaxkicur.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkeGFxc2d5bHFjaGRheGtpY3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwOTgxNTMsImV4cCI6MjA5MTY3NDE1M30.TMB6FXP2igSgbBT-yLGbTsUr_hUhpWrsYk7Ay5KiYRQ';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let currentUser=null;
+let currentProfile=null;
+let _syncTimer=null;
+
+// ========== AUTH ==========
+async function checkSession(){
+const{data:{session}}=await sb.auth.getSession();
+if(session){
+currentUser=session.user;
+const{data:prof}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+currentProfile=prof;
+onAuthReady();
+}else{
+showLoginOverlay();
+}
+}
+function showLoginOverlay(){
+document.getElementById('loginOverlay').style.display='flex';
+document.getElementById('loginEmail').focus();
+}
+function hideLoginOverlay(){
+document.getElementById('loginOverlay').style.display='none';
+}
+async function handleLogin(){
+const email=document.getElementById('loginEmail').value.trim();
+const pass=document.getElementById('loginPassword').value;
+const errEl=document.getElementById('loginError');
+const btn=document.getElementById('loginBtn');
+errEl.textContent='';
+if(!email||!pass){errEl.textContent='יש למלא אימייל וסיסמא';return;}
+btn.disabled=true;btn.textContent='מתחבר...';
+const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+btn.disabled=false;btn.textContent='כניסה';
+if(error){errEl.textContent='שם משתמש או סיסמא שגויים';return;}
+currentUser=data.user;
+const{data:prof}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+currentProfile=prof;
+hideLoginOverlay();
+onAuthReady();
+}
+async function handleLogout(){
+await sb.auth.signOut();
+currentUser=null;currentProfile=null;
+document.getElementById('userBadge').style.display='none';
+document.getElementById('logoutBtn').style.display='none';
+document.getElementById('navProfile').style.display='none';
+document.getElementById('navDashboard').style.display='none';
+showLoginOverlay();
+nav('home');
+}
+function onAuthReady(){
+hideLoginOverlay();
+// Update navbar
+document.getElementById('userBadgeName').textContent=currentProfile?.full_name||currentUser.email;
+document.getElementById('userBadge').style.display='flex';
+document.getElementById('logoutBtn').style.display='inline-block';
+if(currentProfile?.role==='teacher'){
+document.getElementById('navDashboard').style.display='block';
+document.getElementById('navProfile').style.display='none';
+}else{
+document.getElementById('navProfile').style.display='block';
+document.getElementById('navDashboard').style.display='none';
+}
+// Load state from Supabase
+loadStateFromSupabase();
+logActivity('login',{});
+}
+// Enter on password field
+document.addEventListener('DOMContentLoaded',()=>{
+const pf=document.getElementById('loginPassword');
+if(pf)pf.addEventListener('keydown',e=>{if(e.key==='Enter')handleLogin();});
+});
+
+// ========== SUPABASE DATA SYNC ==========
+async function loadStateFromSupabase(){
+if(!currentUser)return;
+try{
+const{data}=await sb.from('student_progress').select('*').eq('user_id',currentUser.id);
+if(data&&data.length>0){
+data.forEach(row=>{
+state.currentPages[row.unit_id]=Math.max(state.currentPages[row.unit_id]||0,row.content_page);
+if(!state.progress[row.unit_id])state.progress[row.unit_id]={content:0,quiz:0};
+state.progress[row.unit_id].content=Math.max(state.progress[row.unit_id].content||0,row.content_page);
+state.progress[row.unit_id].quiz=Math.max(state.progress[row.unit_id].quiz||0,row.quiz_score);
+});
+saveStateLocal();
+renderAll();renderContinueBtn();renderAchievements();updateProgress();
+}
+}catch(e){console.warn('loadStateFromSupabase error',e);}
+}
+function debouncedSync(){
+if(_syncTimer)clearTimeout(_syncTimer);
+_syncTimer=setTimeout(()=>syncProgressToSupabase(),3000);
+}
+async function syncProgressToSupabase(){
+if(!currentUser||currentProfile?.role==='teacher')return;
+try{
+for(const uid of Object.keys(state.progress)){
+const p=state.progress[uid];
+await sb.from('student_progress').upsert({
+user_id:currentUser.id,
+unit_id:parseInt(uid),
+content_page:state.currentPages[uid]||0,
+quiz_score:p.quiz||0,
+quiz_total:p.quizTotal||0
+},{onConflict:'user_id,unit_id'});
+}
+}catch(e){console.warn('syncProgressToSupabase error',e);}
+}
+async function saveQuizAttempt(uid,mode,correct,total){
+if(!currentUser||currentProfile?.role==='teacher')return;
+try{
+await sb.from('quiz_attempts').insert({
+user_id:currentUser.id,
+unit_id:uid,
+mode:mode,
+correct_count:correct,
+total_count:total,
+score_percent:Math.round((correct/total)*100)
+});
+}catch(e){console.warn('saveQuizAttempt error',e);}
+}
+async function saveGameScore(gameType,score,maxScore){
+if(!currentUser||currentProfile?.role==='teacher')return;
+try{
+await sb.from('game_scores').insert({
+user_id:currentUser.id,
+game_type:gameType,
+score:score,
+max_score:maxScore,
+score_percent:Math.round((score/maxScore)*100)
+});
+}catch(e){console.warn('saveGameScore error',e);}
+}
+async function logActivity(action,metadata){
+if(!currentUser)return;
+try{await sb.from('activity_log').insert({user_id:currentUser.id,action,metadata});}catch(e){}
+}
+
+// ========== STUDENT PROFILE ==========
+async function renderStudentProfile(){
+const el=document.getElementById('studentProfileContent');
+if(!currentUser||!currentProfile){el.innerHTML='';return;}
+const initials=currentProfile.full_name.split(' ').map(w=>w[0]).join('').slice(0,2);
+let h=`<div class="profile-header">
+<div class="avatar">${initials}</div>
+<div class="info"><h3>${currentProfile.full_name}</h3><p>${currentProfile.class_name||'ללא כיתה'} | ${currentProfile.email}</p></div>
+</div>`;
+// Progress per unit
+h+='<h3 style="margin-bottom:.8rem"><i class="bi bi-bar-chart"></i> התקדמות ביחידות</h3>';
+h+='<div class="row g-3 mb-4">';
+UNITS.forEach(u=>{
+const pct=getUnitProgress(u.id);
+h+=`<div class="col-6 col-md-4"><div class="detail-card">
+<h4>${u.icon} יחידה ${u.id}</h4>
+<div class="chart-bar-row"><div class="bar"><div class="fill" style="width:${pct}%;background:${u.color}"></div></div><span class="val">${pct}%</span></div>
+</div></div>`;
+});
+h+='</div>';
+// Quiz history
+const{data:quizzes}=await sb.from('quiz_attempts').select('*').eq('user_id',currentUser.id).order('completed_at',{ascending:false}).limit(20);
+h+='<div class="detail-card"><h4><i class="bi bi-patch-question"></i> היסטוריית מבחנים</h4>';
+if(quizzes&&quizzes.length>0){
+h+='<table class="dash-table"><tr><th>יחידה</th><th>מצב</th><th>ציון</th><th>תאריך</th></tr>';
+quizzes.forEach(q=>{
+const d=new Date(q.completed_at).toLocaleDateString('he-IL');
+h+=`<tr><td>יחידה ${q.unit_id}</td><td>${q.mode==='exam'?'בחינה':'תרגול'}</td><td>${q.score_percent}%</td><td>${d}</td></tr>`;
+});
+h+='</table>';
+}else h+='<p style="color:var(--text-light)">עדיין אין ניסיונות מבחנים</p>';
+h+='</div>';
+// Game scores
+const{data:games}=await sb.from('game_scores').select('*').eq('user_id',currentUser.id).order('completed_at',{ascending:false}).limit(20);
+h+='<div class="detail-card"><h4><i class="bi bi-controller"></i> ציוני משחקים</h4>';
+if(games&&games.length>0){
+h+='<table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תאריך</th></tr>';
+const gameNames={map:'מפה',kings:'מלכים',timeline:'ציר זמן',quotes:'ציטוטים',pictures:'חידות תמונה'};
+games.forEach(g=>{
+const d=new Date(g.completed_at).toLocaleDateString('he-IL');
+h+=`<tr><td>${gameNames[g.game_type]||g.game_type}</td><td>${g.score_percent}%</td><td>${d}</td></tr>`;
+});
+h+='</table>';
+}else h+='<p style="color:var(--text-light)">עדיין אין ציוני משחקים</p>';
+h+='</div>';
+el.innerHTML=h;
+}
+
+// ========== TEACHER DASHBOARD ==========
+let dashStudents=[];
+let dashSelectedStudent=null;
+
+function showDashTab(tab,btn){
+['overview','detail','stats','manage','export'].forEach(t=>{
+const el=document.getElementById('dash'+t.charAt(0).toUpperCase()+t.slice(1));
+if(el)el.style.display=t===tab?'block':'none';
+});
+if(btn){btn.closest('.sub-tabs').querySelectorAll('.sub-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+if(tab==='overview')renderDashOverview();
+if(tab==='stats')renderDashStats();
+if(tab==='manage')renderDashManage();
+if(tab==='export')renderDashExport();
+}
+
+async function fetchAllStudents(){
+const{data:students}=await sb.from('profiles').select('*').eq('role','student').order('full_name');
+if(!students)return[];
+const{data:progress}=await sb.from('student_progress').select('*');
+const{data:activity}=await sb.from('activity_log').select('user_id,created_at').order('created_at',{ascending:false});
+return students.map(s=>{
+const sp=(progress||[]).filter(p=>p.user_id===s.id);
+let totalPct=0;
+UNITS.forEach(u=>{
+const up=sp.find(p=>p.unit_id===u.id);
+if(up){
+const cpct=Math.min(100,(up.content_page/(u.pages.length-1))*100);
+const qpct=u.americanQuestions?Math.min(100,(up.quiz_score/u.americanQuestions.length)*100):0;
+totalPct+=Math.round((cpct+qpct)/2);
+}
+});
+const overallPct=Math.round(totalPct/UNITS.length);
+const lastAct=(activity||[]).find(a=>a.user_id===s.id);
+return{...s,progress:sp,overallPct,lastActivity:lastAct?.created_at};
+});
+}
+
+async function renderDashOverview(){
+const el=document.getElementById('dashOverview');
+el.innerHTML='<p style="color:var(--text-light)">טוען נתונים...</p>';
+dashStudents=await fetchAllStudents();
+if(dashStudents.length===0){
+el.innerHTML='<div class="empty-state"><i class="bi bi-people"></i><p>עדיין אין תלמידים רשומים.<br>הוסף תלמידים בטאב "ניהול תלמידים".</p></div>';
+return;
+}
+let h='<div class="dash-stats">';
+h+=`<div class="stat-card"><div class="stat-num">${dashStudents.length}</div><div class="stat-label">תלמידים</div></div>`;
+const activeCnt=dashStudents.filter(s=>s.is_active).length;
+h+=`<div class="stat-card"><div class="stat-num">${activeCnt}</div><div class="stat-label">פעילים</div></div>`;
+const avgPct=Math.round(dashStudents.reduce((a,s)=>a+s.overallPct,0)/dashStudents.length);
+h+=`<div class="stat-card"><div class="stat-num">${avgPct}%</div><div class="stat-label">ממוצע התקדמות</div></div>`;
+h+='</div>';
+// Filter
+h+='<div style="margin-bottom:1rem"><input type="text" id="dashSearchInput" placeholder="חפש תלמיד..." style="width:100%;max-width:300px;padding:.5rem .8rem;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;background:var(--bg);color:var(--text);outline:none" oninput="filterDashStudents(this.value)"></div>';
+h+='<table class="dash-table" id="dashStudentTable"><tr><th>שם</th><th>כיתה</th><th>התקדמות</th><th>פעילות אחרונה</th><th>סטטוס</th></tr>';
+dashStudents.forEach(s=>{
+const lastDate=s.lastActivity?new Date(s.lastActivity).toLocaleDateString('he-IL'):'לא היתה';
+h+=`<tr class="clickable" onclick="showStudentDetail('${s.id}')">
+<td>${s.full_name}</td>
+<td>${s.class_name||'-'}</td>
+<td><span class="progress-mini"><span class="fill" style="width:${s.overallPct}%"></span></span> ${s.overallPct}%</td>
+<td>${lastDate}</td>
+<td><span class="status-badge ${s.is_active?'active':'inactive'}">${s.is_active?'פעיל':'מושבת'}</span></td>
+</tr>`;
+});
+h+='</table>';
+el.innerHTML=h;
+}
+
+function filterDashStudents(q){
+const rows=document.querySelectorAll('#dashStudentTable tr.clickable');
+q=q.toLowerCase();
+rows.forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';});
+}
+
+async function showStudentDetail(userId){
+dashSelectedStudent=dashStudents.find(s=>s.id===userId);
+if(!dashSelectedStudent)return;
+showDashTab('detail',document.querySelectorAll('#dashTabs .sub-tab')[1]);
+const el=document.getElementById('dashDetail');
+el.innerHTML='<p style="color:var(--text-light)">טוען...</p>';
+const initials=dashSelectedStudent.full_name.split(' ').map(w=>w[0]).join('').slice(0,2);
+let h=`<button class="btn-back" onclick="showDashTab('overview',document.querySelectorAll('#dashTabs .sub-tab')[0])"><i class="bi bi-arrow-right"></i> חזרה לרשימה</button>`;
+h+=`<div class="profile-header">
+<div class="avatar">${initials}</div>
+<div class="info"><h3>${dashSelectedStudent.full_name}</h3><p>${dashSelectedStudent.class_name||'ללא כיתה'} | ${dashSelectedStudent.email}</p></div>
+</div>`;
+// Per-unit progress
+h+='<div class="detail-card"><h4><i class="bi bi-bar-chart"></i> התקדמות ביחידות</h4>';
+UNITS.forEach(u=>{
+const up=dashSelectedStudent.progress.find(p=>p.unit_id===u.id);
+const cpct=up?Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100)):0;
+h+=`<div class="chart-bar-row"><span class="label">${u.icon} יחידה ${u.id}</span><div class="bar"><div class="fill" style="width:${cpct}%;background:${u.color}"></div></div><span class="val">${cpct}%</span></div>`;
+});
+h+='</div>';
+// Quiz attempts
+const{data:quizzes}=await sb.from('quiz_attempts').select('*').eq('user_id',userId).order('completed_at',{ascending:false}).limit(30);
+h+='<div class="detail-card"><h4><i class="bi bi-patch-question"></i> ניסיונות מבחנים</h4>';
+if(quizzes&&quizzes.length>0){
+h+='<table class="dash-table"><tr><th>יחידה</th><th>מצב</th><th>נכונות</th><th>ציון</th><th>תאריך</th></tr>';
+quizzes.forEach(q=>{
+const d=new Date(q.completed_at).toLocaleDateString('he-IL');
+h+=`<tr><td>יחידה ${q.unit_id}</td><td>${q.mode==='exam'?'בחינה':'תרגול'}</td><td>${q.correct_count}/${q.total_count}</td><td>${q.score_percent}%</td><td>${d}</td></tr>`;
+});
+h+='</table>';
+}else h+='<p style="color:var(--text-light)">אין ניסיונות</p>';
+h+='</div>';
+// Game scores
+const{data:games}=await sb.from('game_scores').select('*').eq('user_id',userId).order('completed_at',{ascending:false}).limit(30);
+h+='<div class="detail-card"><h4><i class="bi bi-controller"></i> ציוני משחקים</h4>';
+if(games&&games.length>0){
+h+='<table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תאריך</th></tr>';
+const gameNames={map:'מפה',kings:'מלכים',timeline:'ציר זמן',quotes:'ציטוטים',pictures:'חידות תמונה'};
+games.forEach(g=>{
+const d=new Date(g.completed_at).toLocaleDateString('he-IL');
+h+=`<tr><td>${gameNames[g.game_type]||g.game_type}</td><td>${g.score_percent}%</td><td>${d}</td></tr>`;
+});
+h+='</table>';
+}else h+='<p style="color:var(--text-light)">אין ציונים</p>';
+h+='</div>';
+// Activity log
+const{data:acts}=await sb.from('activity_log').select('*').eq('user_id',userId).order('created_at',{ascending:false}).limit(30);
+h+='<div class="detail-card"><h4><i class="bi bi-clock-history"></i> לוג פעילות</h4>';
+if(acts&&acts.length>0){
+const actionNames={login:'התחבר',page_view:'צפה בעמוד',quiz_complete:'סיים מבחן',game_complete:'סיים משחק',quiz_start:'התחיל מבחן',game_start:'התחיל משחק'};
+h+='<table class="dash-table"><tr><th>פעולה</th><th>פרטים</th><th>תאריך</th></tr>';
+acts.forEach(a=>{
+const d=new Date(a.created_at).toLocaleString('he-IL');
+const meta=a.metadata?JSON.stringify(a.metadata).replace(/[{}"]/g,'').replace(/,/g,', '):'';
+h+=`<tr><td>${actionNames[a.action]||a.action}</td><td style="font-size:.8rem">${meta}</td><td>${d}</td></tr>`;
+});
+h+='</table>';
+}else h+='<p style="color:var(--text-light)">אין פעילות</p>';
+h+='</div>';
+el.innerHTML=h;
+}
+
+async function renderDashStats(){
+const el=document.getElementById('dashStats');
+el.innerHTML='<p style="color:var(--text-light)">טוען סטטיסטיקות...</p>';
+if(dashStudents.length===0)dashStudents=await fetchAllStudents();
+if(dashStudents.length===0){el.innerHTML='<div class="empty-state"><i class="bi bi-graph-up"></i><p>אין נתונים להצגה</p></div>';return;}
+let h='<div class="detail-card"><h4><i class="bi bi-bar-chart"></i> ממוצע התקדמות לכל יחידה</h4>';
+UNITS.forEach(u=>{
+let total=0;
+dashStudents.forEach(s=>{
+const up=s.progress.find(p=>p.unit_id===u.id);
+if(up){
+const cpct=Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100));
+total+=cpct;
+}
+});
+const avg=Math.round(total/dashStudents.length);
+h+=`<div class="chart-bar-row"><span class="label">${u.icon} יחידה ${u.id}</span><div class="bar"><div class="fill" style="width:${avg}%;background:${u.color}"></div></div><span class="val">${avg}%</span></div>`;
+});
+h+='</div>';
+// Inactive students
+const now=Date.now();
+const inactiveStudents=dashStudents.filter(s=>{
+if(!s.lastActivity)return true;
+return(now-new Date(s.lastActivity).getTime())>7*24*60*60*1000;
+});
+h+='<div class="detail-card"><h4><i class="bi bi-exclamation-triangle"></i> תלמידים לא פעילים (7+ ימים)</h4>';
+if(inactiveStudents.length>0){
+h+='<table class="dash-table"><tr><th>שם</th><th>כיתה</th><th>פעילות אחרונה</th></tr>';
+inactiveStudents.forEach(s=>{
+const d=s.lastActivity?new Date(s.lastActivity).toLocaleDateString('he-IL'):'מעולם לא';
+h+=`<tr><td>${s.full_name}</td><td>${s.class_name||'-'}</td><td>${d}</td></tr>`;
+});
+h+='</table>';
+}else h+='<p style="color:var(--success)">כל התלמידים פעילים!</p>';
+h+='</div>';
+// Class breakdown
+const classes={};
+dashStudents.forEach(s=>{
+const c=s.class_name||'ללא כיתה';
+if(!classes[c])classes[c]={students:0,totalPct:0};
+classes[c].students++;
+classes[c].totalPct+=s.overallPct;
+});
+h+='<div class="detail-card"><h4><i class="bi bi-people"></i> סיכום לפי כיתה</h4>';
+h+='<table class="dash-table"><tr><th>כיתה</th><th>תלמידים</th><th>ממוצע התקדמות</th></tr>';
+Object.entries(classes).forEach(([c,d])=>{
+const avg=Math.round(d.totalPct/d.students);
+h+=`<tr><td>${c}</td><td>${d.students}</td><td><span class="progress-mini"><span class="fill" style="width:${avg}%"></span></span> ${avg}%</td></tr>`;
+});
+h+='</table></div>';
+el.innerHTML=h;
+}
+
+function renderDashManage(){
+const el=document.getElementById('dashManage');
+let h='<div class="dash-form"><h3><i class="bi bi-person-plus"></i> הוספת תלמיד חדש</h3>';
+h+='<div class="form-row"><input type="text" id="newStudentName" placeholder="שם מלא"><input type="email" id="newStudentEmail" placeholder="אימייל" dir="ltr"></div>';
+h+='<div class="form-row"><input type="password" id="newStudentPass" placeholder="סיסמא" dir="ltr"><input type="text" id="newStudentClass" placeholder="כיתה (לא חובה)"></div>';
+h+='<button class="btn-add" onclick="addStudent()">הוסף תלמיד</button>';
+h+='<div class="form-msg" id="addStudentMsg"></div></div>';
+// Existing students list
+h+='<h3 style="margin-bottom:.8rem"><i class="bi bi-people"></i> תלמידים קיימים</h3>';
+if(dashStudents.length>0){
+h+='<table class="dash-table"><tr><th>שם</th><th>אימייל</th><th>כיתה</th><th>סטטוס</th><th>פעולות</th></tr>';
+dashStudents.forEach(s=>{
+h+=`<tr>
+<td>${s.full_name}</td>
+<td style="direction:ltr;text-align:right">${s.email}</td>
+<td>${s.class_name||'-'}</td>
+<td><span class="status-badge ${s.is_active?'active':'inactive'}">${s.is_active?'פעיל':'מושבת'}</span></td>
+<td><button class="btn-action" onclick="toggleStudentActive('${s.id}',${!s.is_active})">${s.is_active?'השבת':'הפעל'}</button> <button class="btn-action danger" onclick="deleteStudent('${s.id}','${s.full_name}')">מחק</button></td>
+</tr>`;
+});
+h+='</table>';
+}else h+='<p style="color:var(--text-light)">אין תלמידים</p>';
+el.innerHTML=h;
+}
+
+async function addStudent(){
+const name=document.getElementById('newStudentName').value.trim();
+const email=document.getElementById('newStudentEmail').value.trim();
+const pass=document.getElementById('newStudentPass').value;
+const cls=document.getElementById('newStudentClass').value.trim();
+const msg=document.getElementById('addStudentMsg');
+msg.textContent='';msg.className='form-msg';
+if(!name||!email||!pass){msg.textContent='יש למלא שם, אימייל וסיסמא';msg.classList.add('error');return;}
+if(pass.length<6){msg.textContent='סיסמא חייבת להיות לפחות 6 תווים';msg.classList.add('error');return;}
+msg.textContent='יוצר חשבון...';
+try{
+const{data:{session}}=await sb.auth.getSession();
+const res=await fetch(SUPABASE_URL+'/functions/v1/create-student',{
+method:'POST',
+headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_ANON_KEY},
+body:JSON.stringify({email,password:pass,full_name:name,class_name:cls||null})
+});
+const result=await res.json();
+if(!res.ok)throw new Error(result.error||'Failed');
+msg.textContent='התלמיד נוצר בהצלחה!';msg.classList.add('success');
+document.getElementById('newStudentName').value='';
+document.getElementById('newStudentEmail').value='';
+document.getElementById('newStudentPass').value='';
+document.getElementById('newStudentClass').value='';
+dashStudents=await fetchAllStudents();
+renderDashManage();
+}catch(e){
+msg.textContent='שגיאה: '+e.message;msg.classList.add('error');
+}
+}
+
+async function toggleStudentActive(userId,active){
+await sb.from('profiles').update({is_active:active}).eq('id',userId);
+dashStudents=await fetchAllStudents();
+renderDashManage();
+}
+
+async function deleteStudent(userId,name){
+if(!confirm(`למחוק את התלמיד "${name}"? פעולה זו בלתי הפיכה.`))return;
+await sb.from('profiles').delete().eq('id',userId);
+dashStudents=await fetchAllStudents();
+renderDashManage();
+}
+
+function renderDashExport(){
+const el=document.getElementById('dashExport');
+let h='<div class="detail-card"><h4><i class="bi bi-download"></i> ייצוא נתונים</h4>';
+h+='<p style="color:var(--text-light);margin-bottom:1rem">הורד את נתוני התלמידים כקובץ CSV</p>';
+h+='<button class="btn-add" onclick="exportStudentsCSV()"><i class="bi bi-filetype-csv"></i> ייצוא רשימת תלמידים + התקדמות</button>';
+h+='</div>';
+h+='<div class="detail-card"><h4><i class="bi bi-printer"></i> דוח להדפסה</h4>';
+h+='<p style="color:var(--text-light);margin-bottom:1rem">הדפס דוח התקדמות לכל התלמידים</p>';
+h+='<button class="btn-add" onclick="printReport()"><i class="bi bi-printer"></i> הדפס דוח</button>';
+h+='</div>';
+el.innerHTML=h;
+}
+
+async function exportStudentsCSV(){
+if(dashStudents.length===0)dashStudents=await fetchAllStudents();
+let csv='\ufeff"שם","אימייל","כיתה","סטטוס","התקדמות כללית %"';
+UNITS.forEach(u=>{csv+=',"יחידה '+u.id+' %"';});
+csv+='\n';
+dashStudents.forEach(s=>{
+csv+=`"${s.full_name}","${s.email}","${s.class_name||''}","${s.is_active?'פעיל':'מושבת'}","${s.overallPct}"`;
+UNITS.forEach(u=>{
+const up=s.progress.find(p=>p.unit_id===u.id);
+const cpct=up?Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100)):0;
+csv+=',"'+cpct+'"';
+});
+csv+='\n';
+});
+const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+const link=document.createElement('a');
+link.href=URL.createObjectURL(blob);
+link.download='students_report.csv';
+link.click();
+}
+
+function printReport(){
+const w=window.open('','','width=800,height=600');
+let h='<html dir="rtl"><head><style>body{font-family:Arial,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:6px 8px;text-align:right;font-size:12px}th{background:#f0f0f0}h1{font-size:18px}h2{font-size:14px;margin-top:20px}</style></head><body>';
+h+='<h1>דוח התקדמות — ספר מלכים</h1>';
+h+=`<p>תאריך: ${new Date().toLocaleDateString('he-IL')}</p>`;
+h+='<table><tr><th>שם</th><th>כיתה</th><th>התקדמות</th>';
+UNITS.forEach(u=>{h+='<th>יחידה '+u.id+'</th>';});
+h+='</tr>';
+dashStudents.forEach(s=>{
+h+=`<tr><td>${s.full_name}</td><td>${s.class_name||'-'}</td><td>${s.overallPct}%</td>`;
+UNITS.forEach(u=>{
+const up=s.progress.find(p=>p.unit_id===u.id);
+const cpct=up?Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100)):0;
+h+=`<td>${cpct}%</td>`;
+});
+h+='</tr>';
+});
+h+='</table></body></html>';
+w.document.write(h);
+w.document.close();
+w.print();
+}
+
 // ========== STATE MANAGEMENT ==========
 let state={
 currentPages:{},progress:{},quizScores:{},gameHighscores:{},theme:'light'
 };
 function loadState(){try{const s=localStorage.getItem('melachim_v2');if(s)state={...state,...JSON.parse(s)};}catch(e){}}
-function saveState(){try{localStorage.setItem('melachim_v2',JSON.stringify(state));}catch(e){}}
+function saveStateLocal(){try{localStorage.setItem('melachim_v2',JSON.stringify(state));}catch(e){}}
+function saveState(){saveStateLocal();debouncedSync();}
 function initState(){loadState();UNITS.forEach(u=>{if(!state.currentPages[u.id])state.currentPages[u.id]=0;if(!state.progress[u.id])state.progress[u.id]={content:0,quiz:0};});if(state.theme==='dark')document.documentElement.dataset.theme='dark';}
 // ========== THEME ==========
 function toggleTheme(){
@@ -4964,12 +5584,18 @@ document.getElementById('gameSelect').innerHTML=h;
 }
 // ========== NAVIGATION ==========
 function nav(id){
+if(!currentUser&&id!=='login')return;
+if(id==='teacher-dashboard'&&currentProfile?.role!=='teacher')return;
+if(id==='student-profile'&&currentProfile?.role==='teacher')id='teacher-dashboard';
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
 const el=document.getElementById(id);
 if(el){el.classList.add('active');window.scrollTo({top:0});}
 const navEl=document.getElementById('mainNav');
 if(navEl&&navEl.classList.contains('show')){try{bootstrap.Collapse.getInstance(navEl)?.hide();}catch(e){}}
 history.pushState(null,null,'#'+id);
+if(id==='student-profile')renderStudentProfile();
+if(id==='teacher-dashboard')renderDashOverview();
+if(id.startsWith('unit-'))logActivity('page_view',{unit:id});
 }
 function showSubTab(uid,tab,btn){
 ['content','quiz','bagrut','map'].forEach(t=>{const el=document.getElementById(`unit${uid}-${t}`);if(el)el.classList.toggle('active',t===tab);});
@@ -5062,6 +5688,8 @@ document.getElementById(`quizSummary-${uid}`).innerHTML=sum;
 document.getElementById(`quizSummary-${uid}`).style.display='block';
 document.getElementById(`quizSummary-${uid}`).scrollIntoView({behavior:'smooth'});
 if(scorePct>=80)launchConfetti();
+saveQuizAttempt(uid,'practice',qs.correct,qs.answered);
+logActivity('quiz_complete',{unit_id:uid,score:scorePct,correct:qs.correct,total:qs.answered});
 }
 }
 function toggleBagrutAnswer(uid,qi){document.getElementById(`ba-${uid}-${qi}`).classList.toggle('show');}
@@ -5072,6 +5700,7 @@ function startGame(type){
 const area=document.getElementById('gameArea');
 if(gameState.timer)clearInterval(gameState.timer);
 gameState={type,current:0,score:0,hintsUsed:0,answers:[],timer:null,seconds:0};
+logActivity('game_start',{game_type:type});
 if(type==='tanach-maps'){
 const overlay=document.createElement('div');overlay.id='tanachMapsOverlay';overlay.className='tanach-maps-overlay';
 overlay.innerHTML=`<button class="tanach-maps-close" onclick="closeTanachMaps()" title="סגור">✕</button><iframe src="https://elad-st.github.io/tanach-maps/" allow="fullscreen"></iframe>`;
@@ -5330,6 +5959,8 @@ const pct=Math.round((t==='kings'?score/maxScore:score/total)*100);
 const stars=pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐':pct>=40?'⭐':'';
 if(!state.gameHighscores[t]||pct>state.gameHighscores[t]){state.gameHighscores[t]=pct;saveState();renderGameSelect();}
 if(pct>=80)launchConfetti();
+saveGameScore(t,score,maxScore);
+logActivity('game_complete',{game_type:t,score:pct});
 let reviewHTML='';
 gameState.answers.forEach((a,i)=>{
 reviewHTML+=`<div style="padding:.5rem;margin:.2rem 0;background:${a.isCorrect?'var(--success-light)':'var(--error-light)'};border-radius:6px;font-size:.83rem">
@@ -5495,9 +6126,10 @@ el.innerHTML=h;el.style.display='block';
 }
 
 // ========== INIT ==========
-window.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('DOMContentLoaded',async()=>{
 initState();renderAll();renderContinueBtn();renderAchievements();
-const hash=location.hash.slice(1);if(hash)nav(hash);
+await checkSession();
+const hash=location.hash.slice(1);if(hash&&currentUser)nav(hash);
 });
 window.addEventListener('popstate',()=>{const hash=location.hash.slice(1);if(hash)nav(hash);});
 window.addEventListener('scroll',()=>{document.getElementById('scrollTop').classList.toggle('show',window.scrollY>400);});
