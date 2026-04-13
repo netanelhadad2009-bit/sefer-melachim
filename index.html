@@ -404,6 +404,10 @@ body{font-size:15px;padding-top:56px}
 <input type="password" id="loginPassword" placeholder="סיסמא" dir="ltr" autocomplete="current-password">
 <button class="btn-login" id="loginBtn" onclick="handleLogin()">כניסה</button>
 <div class="error-msg" id="loginError"></div>
+<div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)">
+<p style="font-size:.82rem;color:var(--text-light);margin-bottom:.6rem">לא רשום? היכנס כאורח</p>
+<button class="btn-login" style="background:var(--secondary)" onclick="enterGuestMode()">🎓 כניסה כאורח</button>
+</div>
 </div>
 </div>
 <nav class="navbar navbar-expand-lg fixed-top">
@@ -1652,9 +1656,22 @@ currentProfile=prof;
 hideLoginOverlay();
 onAuthReady();
 }
+let isGuest=false;
+function enterGuestMode(){
+isGuest=true;
+currentUser={id:'guest',email:'guest'};
+currentProfile={id:'guest',email:'guest',full_name:'אורח',role:'guest',is_active:true};
+hideLoginOverlay();
+document.getElementById('userBadgeName').textContent='אורח 🎓';
+document.getElementById('userBadge').style.display='flex';
+document.getElementById('logoutBtn').style.display='inline-block';
+document.getElementById('navProfile').style.display='none';
+document.getElementById('navDashboard').style.display='none';
+nav('home');
+}
 async function handleLogout(){
-await sb.auth.signOut();
-currentUser=null;currentProfile=null;
+if(!isGuest)await sb.auth.signOut();
+currentUser=null;currentProfile=null;isGuest=false;
 document.getElementById('userBadge').style.display='none';
 document.getElementById('logoutBtn').style.display='none';
 document.getElementById('navProfile').style.display='none';
@@ -1693,7 +1710,7 @@ if(pf)pf.addEventListener('keydown',e=>{if(e.key==='Enter')handleLogin();});
 
 // ========== SUPABASE DATA SYNC ==========
 async function loadStateFromSupabase(){
-if(!currentUser)return;
+if(!currentUser||isGuest)return;
 try{
 const{data}=await sb.from('student_progress').select('*').eq('user_id',currentUser.id);
 if(data&&data.length>0){
@@ -1713,7 +1730,7 @@ if(_syncTimer)clearTimeout(_syncTimer);
 _syncTimer=setTimeout(()=>syncProgressToSupabase(),3000);
 }
 async function syncProgressToSupabase(){
-if(!currentUser||currentProfile?.role==='teacher')return;
+if(!currentUser||currentProfile?.role==='teacher'||isGuest)return;
 try{
 for(const uid of Object.keys(state.progress)){
 const p=state.progress[uid];
@@ -1728,7 +1745,7 @@ quiz_total:p.quizTotal||0
 }catch(e){console.warn('syncProgressToSupabase error',e);}
 }
 async function saveQuizAttempt(uid,mode,correct,total){
-if(!currentUser||currentProfile?.role==='teacher')return;
+if(!currentUser||currentProfile?.role==='teacher'||isGuest)return;
 try{
 await sb.from('quiz_attempts').insert({
 user_id:currentUser.id,
@@ -1741,7 +1758,7 @@ score_percent:Math.round((correct/total)*100)
 }catch(e){console.warn('saveQuizAttempt error',e);}
 }
 async function saveGameScore(gameType,score,maxScore){
-if(!currentUser||currentProfile?.role==='teacher')return;
+if(!currentUser||currentProfile?.role==='teacher'||isGuest)return;
 try{
 await sb.from('game_scores').insert({
 user_id:currentUser.id,
@@ -1753,7 +1770,7 @@ score_percent:Math.round((score/maxScore)*100)
 }catch(e){console.warn('saveGameScore error',e);}
 }
 async function logActivity(action,metadata){
-if(!currentUser)return;
+if(!currentUser||isGuest)return;
 try{await sb.from('activity_log').insert({user_id:currentUser.id,action,metadata});}catch(e){}
 }
 
@@ -2684,8 +2701,8 @@ renderBagrutQuestion(uid);
 function renderMapSection(u){
 let h=`<h3 style="color:var(--primary);margin-bottom:1rem;font-size:1.1rem"><i class="bi bi-geo-alt-fill"></i> מקומות מרכזיים — ${u.title}</h3>`;
 u.mapLocations.forEach((loc,i)=>{
-const mapsArg=loc.maps?JSON.stringify(loc.maps):'null';
-h+=`<div class="map-card" onclick="openLocationMap('${loc.name.replace(/'/g,"\\'")}','${loc.info.replace(/'/g,"\\'")}',${loc.lat},${loc.lng},${mapsArg})" style="animation-delay:${i*0.05}s"><div class="pin">📍</div><div><h4>${loc.name}</h4><p>${loc.info}</p></div><div style="margin-right:auto;display:flex;align-items:center;color:var(--primary);font-size:.8rem;opacity:.6;white-space:nowrap"><i class="bi bi-map"></i></div></div>`;
+const mapsData=loc.maps?encodeURIComponent(JSON.stringify(loc.maps)):'';
+h+=`<div class="map-card" data-maps="${mapsData}" onclick="openLocationMap(this,'${loc.name.replace(/'/g,"\\'")}','${loc.info.replace(/'/g,"\\'")}',${loc.lat},${loc.lng})" style="animation-delay:${i*0.05}s"><div class="pin">📍</div><div><h4>${loc.name}</h4><p>${loc.info}</p></div><div style="margin-right:auto;display:flex;align-items:center;color:var(--primary);font-size:.8rem;opacity:.6;white-space:nowrap"><i class="bi bi-map"></i></div></div>`;
 });
 return h;
 }
@@ -2710,7 +2727,7 @@ document.getElementById('gameSelect').innerHTML=h;
 function nav(id){
 if(!currentUser&&id!=='login')return;
 if(id==='teacher-dashboard'&&currentProfile?.role!=='teacher')return;
-if(id==='student-profile'&&currentProfile?.role==='teacher')id='teacher-dashboard';
+if(id==='student-profile'&&(currentProfile?.role==='teacher'||isGuest))return;
 document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
 const el=document.getElementById(id);
 if(el){el.classList.add('active');window.scrollTo({top:0});}
@@ -3161,20 +3178,53 @@ let h='<h3 style="color:var(--primary);margin-bottom:1.5rem">ציר מאורעו
 TIMELINE_EVENTS.forEach((e,i)=>{h+=`<div class="tl-event" style="animation-delay:${i*0.08}s"><div class="year">${e.year} לפנה"ס</div><div class="desc">${e.event}</div></div>`;});
 h+='</div>';c.innerHTML=h;
 }else if(tab==='themes'){
-let h='<h3 style="color:var(--primary);margin-bottom:1rem">נושאי רוחב</h3>';
-[{t:"עקרון הסיבתיות הכפולה",icon:"⚖️",d:"האירועים מתרחשים בהשגחת ה' ובמקביל — כתוצאה מפעולות אנושיות. דוגמה: הפילוג — גם גזירת ה' (חטא שלמה) וגם טיפשות רחבעם."},
-{t:"מנהיג ומנהיגות",icon:"👑",d:"אמת המידה — 'עשיית הישר בעיני ה''. שלמה ביקש חכמה (מנהיגות ראויה), אך חטא בסוף (מנהיגות כושלת). הנביאים ביקרו מלכים ללא משוא פנים."},
-{t:"בית המקדש",icon:"🏛️",d:"נבנה בפתח הספר ונחרב בסופו. מרכז רוחני שמלכים טיהרו (חזקיהו, יאשיהו) או זיהמו (מנשה). תמונת מראה למצב הממלכה."},
-{t:"מלך ונביא",icon:"📜",d:"הנביאים — 'מבקר המדינה'. אליהו מול אחאב, ישעיהו מול חזקיהו, אחיה מול ירבעם. תפקידם: להביא דבר ה', למנות מלכים, לבקר."},
-{t:"ישראל והעמים",icon:"🌍",d:"סחר, נישואין, מלחמות — בין הזדמנות לסכנה. מלכת שבא (הכרה), איזבל (סכנה), אשור ובבל (כיבוש). מיקום ארץ ישראל בין המעצמות."},
-{t:"מצב רוחני — מצב מדיני",icon:"📊",d:"שגשוג רוחני = הצלחה מדינית (שלמה). הידרדרות = חורבן. אך לפעמים התמונה מורכבת — ימי שפל רוחני בלוויית הצלחה מדינית."},
-{t:"אחדות ופילוג",icon:"🔗",d:"הספר פותח בממלכה מאוחדת ומתאר את הפילוג, מלחמות האחים, ולבסוף חורבן שתי הממלכות. שיתוף פעולה מול פילוג."}
-].forEach(x=>{h+=`<div class="content-page"><h3>${x.icon} ${x.t}</h3><p style="line-height:1.8;color:var(--text)">${x.d}</p></div>`;});
-c.innerHTML=h;
+renderThemes(c);
 }else if(tab==='glossary'){
 renderGlossary(c);
 }
 }
+// ========== THEMES (נושאי רוחב) ==========
+const THEMES_DATA=[
+{t:"עקרון הסיבתיות הכפולה",icon:"⚖️",d:"האירועים מתרחשים בהשגחת ה' ובמקביל — כתוצאה מפעולות אנושיות.",ext:"<p>כל אירוע מרכזי מוצג בשני מישורים:</p><ul><li><strong>המישור האלוקי</strong> — גזירת ה' כעונש או שכר</li><li><strong>המישור האנושי</strong> — בחירות ומעשים של בני אדם</li></ul><p><strong>דוגמה — הפילוג:</strong> ה' גזר קריעת הממלכה בגלל חטאי שלמה. בפועל קרה בגלל טיפשות רחבעם.</p><p><strong>דוגמה — מות אחאב:</strong> מיכיהו ניבא מותו (גזירה), אך חץ 'לתומו' פגע בו (מקרה).</p>",units:[1,2,3],q:"הסבירו את עקרון הסיבתיות הכפולה והדגימו בשתי דוגמאות.",a:"<p><strong>העקרון:</strong> אירועים מוצגים כגזירה אלוקית ובמקביל כתוצאה ממעשים אנושיים.</p><p><strong>דוגמה 1 — פילוג:</strong> גזירת ה' בגלל חטאי שלמה + טיפשות רחבעם.</p><p><strong>דוגמה 2 — מות אחאב:</strong> נבואת מיכיהו + חץ 'לתומו'.</p>"},
+{t:"מנהיג ומנהיגות",icon:"👑",d:"אמת המידה — 'עשיית הישר בעיני ה''. הנביאים ביקרו מלכים ללא משוא פנים.",ext:"<p>כל מלך נבחן לפי: <strong>'ויעש הישר/הרע בעיני ה''</strong>.</p><ul><li><strong>ראויה:</strong> שלמה ביקש חכמה. חזקיהו בטח בה'. יאשיהו חידש הברית.</li><li><strong>כושלת:</strong> רחבעם לא שמע לעם. ירבעם החטיא. אחאב נשלט ע\"י איזבל.</li></ul><p>גדולת מנהיג נמדדת בנאמנותו לה'.</p>",units:[1,2,3,4,5,6],q:"מהי אמת המידה להערכת מלכים? דוגמה למנהיגות ראויה וכושלת.",a:"<p><strong>אמת המידה:</strong> 'עשיית הישר בעיני ה''.</p><p><strong>ראויה:</strong> חזקיהו — ביער עבודה זרה, בטח בה' במצור אשור.</p><p><strong>כושלת:</strong> אחאב — עבודת בעל, נשלט ע\"י איזבל, גזל כרם נבות.</p>"},
+{t:"בית המקדש",icon:"🏛️",d:"נבנה בפתח הספר ונחרב בסופו. תמונת מראה למצב הממלכה.",ext:"<p>המקדש — ציר מרכזי:</p><ul><li><strong>בנייה:</strong> שלמה — שיא הממלכה. תפילת חנוכה.</li><li><strong>טיהור:</strong> חזקיהו ויאשיהו.</li><li><strong>זיהום:</strong> מנשה הכניס אלילים למקדש.</li><li><strong>חורבן:</strong> נבוכדנצר — סוף הממלכה.</li></ul><p>מצב המקדש = מצב הקשר בין העם לה'.</p>",units:[1,5,6],q:"תארו את מקום המקדש בספר מלכים — מבנייתו ועד חורבנו.",a:"<p><strong>בנייה:</strong> שלמה — 7 שנות בנייה, תפילת חנוכה.</p><p><strong>טיהור:</strong> חזקיהו ויאשיהו.</p><p><strong>זיהום:</strong> מנשה — פסל אשרה.</p><p><strong>חורבן:</strong> נבוכדנצר, 586 לפנה\"ס.</p>"},
+{t:"מלך ונביא",icon:"📜",d:"הנביאים — 'מבקר המדינה'. תפקידם: דבר ה', מינוי מלכים, ביקורת.",ext:"<p>הנביא — כוח מאזן:</p><ul><li><strong>אחיה ← ירבעם:</strong> ניבא מלוכה, ואח\"כ חורבן ביתו.</li><li><strong>אליהו ← אחאב:</strong> בצורת, הר הכרמל, כרם נבות.</li><li><strong>אלישע:</strong> ניסים ומלחמות.</li><li><strong>ישעיהו ← חזקיהו:</strong> עצה לבטוח בה' מול אשור.</li></ul>",units:[2,3,4,5],q:"הסבירו את יחסי מלך-נביא. שתי דוגמאות לאופי שונה.",a:"<p><strong>עימות — אליהו ואחאב:</strong> הוכחה על עבודת בעל וכרם נבות.</p><p><strong>שיתוף — ישעיהו וחזקיהו:</strong> עצה ועידוד במצור אשור.</p>"},
+{t:"ישראל והעמים",icon:"🌍",d:"סחר, נישואין, מלחמות — בין הזדמנות לסכנה.",ext:"<p>ארץ ישראל בין מעצמות:</p><ul><li><strong>הזדמנות:</strong> מלכת שבא — הכרה. חירם — שותף מסחרי.</li><li><strong>סכנה תרבותית:</strong> איזבל הביאה עבודת בעל.</li><li><strong>איום צבאי:</strong> שישק שדד ירושלים. אשור כבשה ישראל. בבל החריבה יהודה.</li></ul>",units:[1,3,5,6],q:"כיצד משפיעים יחסי חוץ על המצב הרוחני והמדיני? דוגמה חיובית ושלילית.",a:"<p><strong>חיובית:</strong> חירם — שותפות לבניית המקדש ושגשוג.</p><p><strong>שלילית:</strong> איזבל — החדרת עבודת בעל, רדיפת נביאי ה'.</p>"},
+{t:"מצב רוחני — מצב מדיני",icon:"📊",d:"שגשוג רוחני = הצלחה מדינית. הידרדרות = חורבן.",ext:"<p>קשר ישיר בדרך כלל:</p><ul><li><strong>שלמה:</strong> נאמנות → עושר. חטא → אויבים.</li><li><strong>חזקיהו:</strong> ביער ע\"ז → ניצל מאשור.</li><li><strong>מנשה:</strong> ע\"ז → גזירת חורבן.</li></ul><p><strong>חריגה:</strong> ירבעם בן יואש — הצלחה למרות שפל רוחני.</p>",units:[1,2,3,5,6],q:"הסבירו את הקשר בין מצב רוחני למדיני. האם תמיד ישיר?",a:"<p><strong>ככלל:</strong> נאמנות לה' = הצלחה, חטא = שפל.</p><p><strong>דוגמה:</strong> חזקיהו ביער ע\"ז → ניצל ממצור סנחריב.</p><p><strong>חריגה:</strong> ירבעם בן יואש — הצלחה מדינית למרות 'הרע בעיני ה''.</p>"},
+{t:"אחדות ופילוג",icon:"🔗",d:"הספר פותח בממלכה מאוחדת ומסיים בחורבן שתי הממלכות.",ext:"<p>מסע מאחדות לחורבן:</p><ul><li><strong>אחדות:</strong> שלמה — שיא.</li><li><strong>פילוג:</strong> 10 שבטים (ירבעם) מול 2 (רחבעם).</li><li><strong>שיתוף:</strong> יהושפט ואחאב — ברית צבאית.</li><li><strong>חורבן כפול:</strong> ישראל (722), יהודה (586).</li></ul><p>פילוג פנימי מחליש ומוביל לחורבן.</p>",units:[1,2,5,6],q:"תארו את התהליך מאחדות לפילוג. גורמים ותוצאות.",a:"<p><strong>אחדות:</strong> שלמה — שיא.</p><p><strong>גורמים:</strong> חטאי שלמה (גזירה) + סירוב רחבעם (אנושי).</p><p><strong>תוצאות:</strong> מלחמות אחים, החלשה, חורבן — ישראל (722) ויהודה (586).</p>"}
+];
+let themeState={currentQ:0,answers:[]};
+function renderThemes(c){
+themeState={currentQ:0,answers:[]};const total=THEMES_DATA.length;
+let h='<h3 style="color:var(--primary);margin-bottom:1rem">נושאי רוחב</h3>';
+h+=`<div class="page-nav"><button onclick="themeNav(-1)" id="thPrev" disabled><i class="bi bi-arrow-right"></i> הקודם</button><span class="counter"><i class="bi bi-layers"></i> <span id="thNum">1 / ${total}</span></span><button onclick="themeNav(1)" id="thNext">הבא <i class="bi bi-arrow-left"></i></button></div>`;
+h+=`<div id="themeCard"></div>`;c.innerHTML=h;renderThemeCard();
+}
+function renderThemeCard(){
+const qi=themeState.currentQ;const th=THEMES_DATA[qi];const total=THEMES_DATA.length;const ans=themeState.answers[qi];
+const unitLinks=th.units.map(uid=>{const u=UNITS.find(x=>x.id===uid);return u?`<span style="display:inline-block;font-size:.75rem;padding:.2rem .5rem;background:var(--primary-light);border-radius:12px;color:var(--primary);cursor:pointer;margin:.15rem" onclick="nav('unit-${uid}');showSubTab(${uid},'content',document.querySelector('#unit-${uid} .sub-tabs .sub-tab:first-child'))">${u.icon} יחידה ${uid}</span>`:''}).join('');
+let h=`<div class="bagrut-q" style="margin-bottom:0"><div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem"><span style="font-size:1.8rem">${th.icon}</span><h3 style="margin:0;border:none;padding:0;color:var(--primary)">${th.t}</h3></div>`;
+h+=`<p style="line-height:1.8;color:var(--text);font-size:.95rem;margin-bottom:.8rem">${th.d}</p>`;
+h+=`<details style="margin-bottom:1rem"><summary style="cursor:pointer;font-weight:700;color:var(--secondary);font-size:.9rem">📖 הרחבה ודוגמאות</summary><div style="margin-top:.6rem;line-height:1.8;font-size:.9rem">${th.ext}</div></details>`;
+h+=`<div style="margin-bottom:1rem"><div style="font-size:.78rem;color:var(--text-light);font-weight:600;margin-bottom:.3rem">מופיע ביחידות:</div>${unitLinks}</div>`;
+h+=`<div style="border-top:1px solid var(--border);padding-top:1rem"><div style="font-weight:700;color:var(--primary);font-size:.9rem;margin-bottom:.5rem">💡 שאלת חשיבה</div>`;
+h+=`<p style="font-size:.93rem;line-height:1.7;margin-bottom:.8rem">${th.q}</p>`;
+if(ans){
+if(ans.studentText){h+=`<div style="background:var(--bg);padding:.8rem;border-radius:var(--radius-sm);margin-bottom:.8rem;border:1px solid var(--border)"><div style="font-size:.78rem;color:var(--text-light);margin-bottom:.3rem;font-weight:600">התשובה שלך:</div><div style="font-size:.9rem;white-space:pre-wrap;line-height:1.7">${escBagrutHTML(ans.studentText)}</div></div>`;}
+if(ans.keyPoints.length>0){const cov=ans.covered.filter(Boolean).length;const tot=ans.keyPoints.length;const pct=Math.round(cov/tot*100);const cls=pct>=70?'correct-fb':pct>=40?'':'wrong-fb';
+h+=`<div class="feedback show ${cls}" style="margin-bottom:.8rem"><strong>${pct>=70?'✓ מצוין!':pct>=40?'👍 לא רע':'✗ יש מקום לשיפור'}</strong> — כיסית ${cov} מתוך ${tot} נקודות מפתח<div style="margin-top:.5rem">`;
+ans.keyPoints.forEach((kp,i)=>{h+=`<div style="font-size:.82rem;margin:.2rem 0">${ans.covered[i]?'✅':'❌'} ${kp}</div>`;});h+=`</div></div>`;}
+h+=`<div style="font-size:.78rem;color:var(--text-light);margin-bottom:.3rem;font-weight:600">תשובה מלאה:</div><div class="bagrut-answer show">${th.a}</div>`;
+}else{
+h+=`<textarea id="thInput-${qi}" style="width:100%;min-height:100px;padding:.8rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.9rem;resize:vertical;background:var(--card);color:var(--text);margin-bottom:.6rem;line-height:1.7" placeholder="כתוב את תשובתך כאן..."></textarea>`;
+h+=`<div style="display:flex;gap:.5rem"><button class="show-ans-btn" onclick="checkThemeAnswer(${qi})"><i class="bi bi-check-circle"></i> בדוק תשובה</button><button class="show-ans-btn" style="background:var(--text-light)" onclick="skipThemeAnswer(${qi})"><i class="bi bi-eye"></i> הצג תשובה</button></div>`;}
+h+=`</div></div>`;
+document.getElementById('themeCard').innerHTML=h;document.getElementById('thNum').textContent=`${qi+1} / ${total}`;
+document.getElementById('thPrev').disabled=qi===0;document.getElementById('thNext').disabled=qi===total-1;
+}
+function themeNav(dir){let n=themeState.currentQ+dir;if(n<0)n=0;if(n>=THEMES_DATA.length)n=THEMES_DATA.length-1;themeState.currentQ=n;renderThemeCard();}
+function checkThemeAnswer(qi){const th=THEMES_DATA[qi];const ta=document.getElementById(`thInput-${qi}`);const st=ta?ta.value.trim():'';if(!st){ta.focus();return;}const kp=extractBagrutKeyPoints(th.a);const cov=kp.map(k=>checkBagrutCoverage(st,k));themeState.answers[qi]={studentText:st,keyPoints:kp,covered:cov};renderThemeCard();}
+function skipThemeAnswer(qi){themeState.answers[qi]={studentText:'',keyPoints:[],covered:[]};renderThemeCard();}
 // ========== PICTURE RIDDLES GAME ==========
 let pictureState={current:0,revealed:0,total:0};
 function startPictureRiddles(area){
@@ -3492,7 +3542,9 @@ window.addEventListener('scroll',()=>{document.getElementById('scrollTop').class
 document.addEventListener('click',e=>{if(!e.target.closest('#searchInput')&&!e.target.closest('#searchResults'))document.getElementById('searchResults').style.display='none';});
 // === MAP MODAL ===
 let mapInstance=null;
-function openLocationMap(name,info,lat,lng,maps){
+function openLocationMap(el,name,info,lat,lng){
+const mapsData=el.dataset&&el.dataset.maps?JSON.parse(decodeURIComponent(el.dataset.maps)):null;
+const maps=mapsData;
 let overlay=document.getElementById('mapModalOverlay');
 if(!overlay){
 overlay=document.createElement('div');
@@ -3510,7 +3562,7 @@ const container=document.getElementById('mapContainer');
 if(maps&&maps.length>0){
 if(mapInstance){mapInstance.remove();mapInstance=null;}
 let html='<div style="display:flex;flex-direction:column;gap:1rem;padding:1rem;max-height:70vh;overflow-y:auto">';
-maps.forEach(src=>{html+=`<img src="${src}" alt="${name}" style="width:100%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.15);cursor:zoom-in" onclick="this.style.maxWidth=this.style.maxWidth==='none'?'100%':'none';this.style.width=this.style.width==='auto'?'100%':'auto'">`;});
+maps.forEach(src=>{html+=`<img src="${src}" alt="${name}" style="width:70%;max-width:500px;margin:0 auto;display:block;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.15);cursor:zoom-in" onclick="if(this.style.width==='70%'){this.style.width='100%';this.style.maxWidth='none';}else{this.style.width='70%';this.style.maxWidth='500px';}">`;});
 html+='</div>';
 container.innerHTML=html;
 }else{
