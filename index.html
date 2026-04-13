@@ -9,6 +9,8 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{--bg:#FEF9F3;--bg2:#F8F4ED;--primary:#D4721A;--primary-light:#FFF3E6;--primary-dark:#B85E12;--secondary:#3D7CC9;--secondary-light:#EBF3FC;--text:#2C3E50;--text-light:#7A6E62;--success:#4CAF7D;--success-light:#E8F5EE;--error:#D64545;--error-light:#FDECEC;--card:#FFFFFF;--border:#E6DFD5;--shadow:0 4px 20px rgba(44,62,80,.06);--shadow-lg:0 8px 32px rgba(44,62,80,.1);--radius:14px;--radius-sm:8px;--transition:.25s cubic-bezier(.4,0,.2,1)}
 [data-theme=dark]{--bg:#1A1D23;--bg2:#22262E;--primary:#F0923A;--primary-light:#2E2518;--primary-dark:#F5A352;--secondary:#5B9BE6;--secondary-light:#1C2A3C;--text:#E4E2DE;--text-light:#9C9488;--card:#272B34;--border:#3A3E47;--shadow:0 4px 20px rgba(0,0,0,.3);--shadow-lg:0 8px 32px rgba(0,0,0,.4)}
@@ -119,11 +121,23 @@ a{color:var(--secondary);text-decoration:none}
 .bagrut-answer{display:none;margin-top:.8rem;padding:1rem;background:var(--secondary-light);border-radius:var(--radius-sm);border:1px solid rgba(61,124,201,.15);animation:slideUp .3s ease}
 .bagrut-answer.show{display:block}
 /* === MAPS === */
-.map-card{background:var(--card);border-radius:var(--radius);padding:1rem;margin-bottom:.6rem;border:1px solid var(--border);display:flex;align-items:flex-start;gap:.8rem;transition:var(--transition);cursor:default}
-.map-card:hover{border-color:var(--primary);box-shadow:var(--shadow)}
-.map-card .pin{width:36px;height:36px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
+.map-card{background:var(--card);border-radius:var(--radius);padding:1rem;margin-bottom:.6rem;border:1px solid var(--border);display:flex;align-items:flex-start;gap:.8rem;transition:var(--transition);cursor:pointer}
+.map-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}
+.map-card .pin{width:36px;height:36px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;transition:var(--transition)}
+.map-card:hover .pin{background:var(--primary);color:#fff;transform:scale(1.1)}
 .map-card h4{font-size:.92rem;color:var(--primary);margin:0 0 .2rem}
 .map-card p{font-size:.83rem;color:var(--text-light);margin:0;line-height:1.5}
+.map-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .3s ease}
+.map-modal-overlay.active{opacity:1;visibility:visible}
+.map-modal{background:var(--card);border-radius:16px;width:92%;max-width:600px;max-height:85vh;overflow:hidden;transform:translateY(30px) scale(.95);transition:all .3s ease;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.map-modal-overlay.active .map-modal{transform:translateY(0) scale(1)}
+.map-modal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid var(--border);background:var(--primary);color:#fff}
+.map-modal-header h3{margin:0;font-size:1.05rem;font-weight:700}
+.map-modal-header .close-map{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:var(--transition)}
+.map-modal-header .close-map:hover{background:rgba(255,255,255,.4)}
+.map-modal-info{padding:.8rem 1.2rem;background:var(--primary-light);font-size:.85rem;color:var(--text);line-height:1.6}
+#mapContainer{width:100%;height:350px}
+@media(min-width:768px){#mapContainer{height:450px}}
 /* === GAMES === */
 .game-select{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
 @media(min-width:768px){.game-select{grid-template-columns:repeat(4,1fr)}}
@@ -977,14 +991,14 @@ bagrutQuestions:[
 {q:"ציינו שני מפעלי בנייה נוספים של שלמה מלבד בית המקדש.",answer:"<p><strong>מפעלי הבנייה של שלמה:</strong></p><ul><li><strong>בית המלך</strong> — 13 שנות בנייה</li><li><strong>חומות ירושלים</strong></li><li><strong>חצור, מגידו, גזר</strong> — ערי מבצר</li><li><strong>בית יער הלבנון</strong> — אולם גדול</li><li><strong>בית לבת פרעה</strong></li><li><strong>ערי מסכנות</strong> (אחסנה), ערי רכב וערי פרשים</li><li><strong>המילוא</strong> (מילוי אדמה לחיזוק ירושלים)</li></ul>",source:'בגרות תשפ"ד, שאלה 1'}
 ],
 mapLocations:[
-{name:"ירושלים",info:"עיר הבירה — מקום בניית המקדש, בית המלך, חומות. מרכז רוחני ומדיני."},
-{name:"גיחון",info:"מעיין סמוך לעיר דוד — מקום משיחת שלמה למלך."},
-{name:"גבעון",info:"מקום 'הבמה הגדולה' — כאן חלם שלמה את חלומו וביקש חכמה."},
-{name:"עציון גבר",info:"נמל סחר בינלאומי על חוף ים סוף — בשותפות עם חירם מלך צור."},
-{name:"צור",info:"עיר חירם מלך צור — סיפק עצי ארזים למקדש, שותף מסחרי מרכזי."},
-{name:"חצור",info:"עיר מבצר שבנה שלמה — מהערים החשובות בצפון."},
-{name:"מגידו",info:"עיר מבצר שבנה שלמה — שליטה אסטרטגית בעמק יזרעאל."},
-{name:"גזר",info:"עיר שפרעה כבש ונתן לבת פרעה אשת שלמה כשילוחים (מתנת חתונה)."}
+{name:"ירושלים",info:"עיר הבירה — מקום בניית המקדש, בית המלך, חומות. מרכז רוחני ומדיני.",lat:31.7683,lng:35.2137},
+{name:"גיחון",info:"מעיין סמוך לעיר דוד — מקום משיחת שלמה למלך.",lat:31.7740,lng:35.2353},
+{name:"גבעון",info:"מקום 'הבמה הגדולה' — כאן חלם שלמה את חלומו וביקש חכמה.",lat:31.8494,lng:35.1847},
+{name:"עציון גבר",info:"נמל סחר בינלאומי על חוף ים סוף — בשותפות עם חירם מלך צור.",lat:29.5467,lng:34.9553},
+{name:"צור",info:"עיר חירם מלך צור — סיפק עצי ארזים למקדש, שותף מסחרי מרכזי.",lat:33.2705,lng:35.1968},
+{name:"חצור",info:"עיר מבצר שבנה שלמה — מהערים החשובות בצפון.",lat:33.0175,lng:35.5683},
+{name:"מגידו",info:"עיר מבצר שבנה שלמה — שליטה אסטרטגית בעמק יזרעאל.",lat:32.5847,lng:35.1847},
+{name:"גזר",info:"עיר שפרעה כבש ונתן לבת פרעה אשת שלמה כשילוחים (מתנת חתונה).",lat:31.8756,lng:34.9219}
 ]
 }
 ];
@@ -1727,14 +1741,14 @@ bagrutQuestions:[
 {q:"כתבו מה חטא בעשא ומה העונש שבישר לו יהוא בן חנני.",answer:"<p><strong>חטא בעשא:</strong> הלך בכל חטאי ירבעם — המשיך את עגלי הזהב, הבמות, והחטיא את ישראל.</p><p><strong>העונש:</strong> יהוא בן חנני ניבא שכל ביתו יוכרת, כמו שנגזר על בית ירבעם: 'הנני מבעיר אחרי בעשא ואחרי ביתו'. הנבואה התגשמה כשזמרי הרג את אלה בנו והשמיד את כל בית בעשא.</p>",source:'בגרות תשפ"ה, שאלה 3'}
 ],
 mapLocations:[
-{name:"שכם",info:"מקום הפילוג — כאן ביקש העם מרחבעם להקל, וכאן המליכו את ירבעם. בירה ראשונה של ממלכת ישראל."},
-{name:"ירושלים",info:"בירת ממלכת יהודה, מקום המקדש. שישק לקח את אוצרותיה."},
-{name:"דן",info:"עגל הזהב הצפוני של ירבעם — בקצה הצפוני של ממלכת ישראל."},
-{name:"בית אל",info:"עגל הזהב הדרומי של ירבעם — ליד גבול יהודה."},
-{name:"שומרון",info:"בירת ממלכת ישראל שבנה עמרי — 'קנה את ההר משמר'."},
-{name:"פנואל",info:"עיר בעבר הירדן שירבעם ביצר — בירה זמנית שנייה."},
-{name:"תרצה",info:"בירה שלישית של ממלכת ישראל — לפני בניית שומרון."},
-{name:"הרמה",info:"בעשא בנה כאן ביצורים לחסום את דרכי יהודה."}
+{name:"שכם",info:"מקום הפילוג — כאן ביקש העם מרחבעם להקל, וכאן המליכו את ירבעם. בירה ראשונה של ממלכת ישראל.",lat:32.2144,lng:35.2544},
+{name:"ירושלים",info:"בירת ממלכת יהודה, מקום המקדש. שישק לקח את אוצרותיה.",lat:31.7683,lng:35.2137},
+{name:"דן",info:"עגל הזהב הצפוני של ירבעם — בקצה הצפוני של ממלכת ישראל.",lat:33.2489,lng:35.6519},
+{name:"בית אל",info:"עגל הזהב הדרומי של ירבעם — ליד גבול יהודה.",lat:31.9347,lng:35.2231},
+{name:"שומרון",info:"בירת ממלכת ישראל שבנה עמרי — 'קנה את ההר משמר'.",lat:32.2761,lng:35.1903},
+{name:"פנואל",info:"עיר בעבר הירדן שירבעם ביצר — בירה זמנית שנייה.",lat:32.2964,lng:35.6767},
+{name:"תרצה",info:"בירה שלישית של ממלכת ישראל — לפני בניית שומרון.",lat:32.3033,lng:35.3064},
+{name:"הרמה",info:"בעשא בנה כאן ביצורים לחסום את דרכי יהודה.",lat:31.8500,lng:35.2106}
 ]
 },
 {id:3,title:"אליהו ואחאב",chapters:"מלכים א': טז-כא, מלכים ב': ב",icon:"🔥",color:"#E67E22",
@@ -2377,14 +2391,14 @@ bagrutQuestions:[
 {q:'איזבל מוזכרת בשלושה הקשרים בסיפורי אליהו. כתבו מה מסופר עליה.',answer:'<p><strong>1. רדיפת נביאי ה\':</strong> הרגה את נביאי ה\'. עובדיה הסתיר 100 נביאים במערות.</p><p><strong>2. איום על אליהו:</strong> לאחר הר הכרמל איימה: "כעת מחר אשים את נפשך כנפש אחד מהם" — אליהו ברח למדבר.</p><p><strong>3. כרם נבות:</strong> ארגנה את המזימה — כתבה מכתבים בשם אחאב, זימנה עדי שקר, וגרמה לסקילת נבות.</p>',source:'בגרות תשפ"ה, שאלה 11'}
 ],
 mapLocations:[
-{name:"הר הכרמל",info:"מעמד אליהו מול 450 נביאי הבעל — 'ה' הוא האלוקים!'"},
-{name:"נחל כרית",info:"אליהו הסתתר כאן — עורבים כלכלו אותו בלחם ובשר."},
-{name:"צרפת",info:"אלמנה כלכלה את אליהו — נס הקמח והשמן, והחיאת בנה."},
-{name:"באר שבע",info:"אליהו ברח לכאן מאיזבל, השאיר את נערו."},
-{name:"הר חורב",info:"התגלות 'קול דממה דקה' — ה' ציווה למנות חזאל, יהוא, אלישע."},
-{name:"יזרעאל",info:"כרם נבות — 'הרצחת וגם ירשת?'. מקום פעילות אחאב ואיזבל."},
-{name:"נחל קישון",info:"אליהו שחט כאן את נביאי הבעל לאחר מעמד הר הכרמל."},
-{name:"שומרון",info:"בירת אחאב — כאן בנה את בית הבעל."}
+{name:"הר הכרמל",info:"מעמד אליהו מול 450 נביאי הבעל — 'ה' הוא האלוקים!'",lat:32.7392,lng:35.0450},
+{name:"נחל כרית",info:"אליהו הסתתר כאן — עורבים כלכלו אותו בלחם ובשר.",lat:32.0500,lng:35.4833},
+{name:"צרפת",info:"אלמנה כלכלה את אליהו — נס הקמח והשמן, והחיאת בנה.",lat:33.4531,lng:35.2942},
+{name:"באר שבע",info:"אליהו ברח לכאן מאיזבל, השאיר את נערו.",lat:31.2518,lng:34.7913},
+{name:"הר חורב",info:"התגלות 'קול דממה דקה' — ה' ציווה למנות חזאל, יהוא, אלישע.",lat:28.5394,lng:33.9753},
+{name:"יזרעאל",info:"כרם נבות — 'הרצחת וגם ירשת?'. מקום פעילות אחאב ואיזבל.",lat:32.5578,lng:35.3292},
+{name:"נחל קישון",info:"אליהו שחט כאן את נביאי הבעל לאחר מעמד הר הכרמל.",lat:32.7500,lng:35.0833},
+{name:"שומרון",info:"בירת אחאב — כאן בנה את בית הבעל.",lat:32.2761,lng:35.1903}
 ]
 },
 {id:4,title:"מהפכות ותמורות",chapters:"מלכים ב': ח-טו",icon:"⚡",color:"#8E44AD",
@@ -3181,9 +3195,9 @@ bagrutQuestions:[
 {q:"כתבו שלוש דוגמאות של נביא שנשלח למלך — מי המלך, מי הנביא ומה בישר.",answer:"<p><strong>1. אחיה השילוני → ירבעם:</strong> בישר שיקבל 10 שבטים (קריעת הממלכה).</p><p><strong>2. אליהו → אחאב</strong> (בכרם נבות): 'הרצחת וגם ירשת' — עונש לבית אחאב.</p><p><strong>3. יהוא בן חנני → בעשא:</strong> ביתו יוכרת כבית ירבעם.</p><p>דוגמאות נוספות: שמעיה → רחבעם (אל תילחם באחיך), ישעיהו → חזקיהו (אל תירא מסנחריב).</p>",source:'בגרות תשפ"ד, שאלה 10'}
 ],
 mapLocations:[
-{name:"שומרון",info:"בירת ישראל — מקום מהפכת יהוא, בית הבעל שנהרס."},
-{name:"יזרעאל",info:"שדה נבות — מקום הריגת יורם ואיזבל בידי יהוא."},
-{name:"ירושלים",info:"מהפכת יהוידע נגד עתליה, שיפוץ המקדש בימי יואש."}
+{name:"שומרון",info:"בירת ישראל — מקום מהפכת יהוא, בית הבעל שנהרס.",lat:32.2761,lng:35.1903},
+{name:"יזרעאל",info:"שדה נבות — מקום הריגת יורם ואיזבל בידי יהוא.",lat:32.5578,lng:35.3292},
+{name:"ירושלים",info:"מהפכת יהוידע נגד עתליה, שיפוץ המקדש בימי יואש.",lat:31.7683,lng:35.2137}
 ]
 },
 {id:5,title:"הכיבוש האשורי",chapters:"מלכים ב': טו-כ",icon:"🏛️",color:"#2980B9",
@@ -3848,12 +3862,12 @@ bagrutQuestions:[
 {q:'כתבו טענה אחת של רבשקה. מה מטרת הנאום? מה הבטיח ישעיהו לחזקיהו?',answer:'<p><strong>טענה:</strong> רבשקה טען שאשור חזקה ושעם ישראל יפסיד. מצרים "משענת קנה רצוץ". אף ה\' עצמו שלח את אשור.</p><p><strong>מטרה:</strong> לשכנע את יושבי ירושלים להיכנע ללא קרב — לשבור רוחם.</p><p><strong>ישעיהו:</strong> "אל תירא" — ה\' יגן. סנחריב ישמע שמועה, ישוב לארצו ויפול בחרב.</p>',source:'בגרות תשפ"ד, שאלה 4'}
 ],
 mapLocations:[
-{name:"שומרון",info:"נפלה ב-722 לפנה\"ס. מצור 3 שנים."},
-{name:"ירושלים",info:"ניצלה בנס — מלאך ה' הכה 185,000 אשורים."},
-{name:"לכיש",info:"עיר מבצר ביהודה שנכבשה בידי סנחריב."},
-{name:"נינוה",info:"בירת אשור — סנחריב נרצח שם בידי בניו."},
-{name:"בבל",info:"ישעיהו ניבא שאוצרות חזקיהו יובלו לשם."},
-{name:"דמשק",info:"נכבשה ע\"י אשור — אחז העתיק משם מזבח למקדש."}
+{name:"שומרון",info:"נפלה ב-722 לפנה\"ס. מצור 3 שנים.",lat:32.2761,lng:35.1903},
+{name:"ירושלים",info:"ניצלה בנס — מלאך ה' הכה 185,000 אשורים.",lat:31.7683,lng:35.2137},
+{name:"לכיש",info:"עיר מבצר ביהודה שנכבשה בידי סנחריב.",lat:31.5647,lng:34.8486},
+{name:"נינוה",info:"בירת אשור — סנחריב נרצח שם בידי בניו.",lat:36.3597,lng:43.1517},
+{name:"בבל",info:"ישעיהו ניבא שאוצרות חזקיהו יובלו לשם.",lat:32.5425,lng:44.4211},
+{name:"דמשק",info:"נכבשה ע\"י אשור — אחז העתיק משם מזבח למקדש.",lat:33.5138,lng:36.2765}
 ]
 },
 {id:6,title:"סופה של ממלכת יהודה וחורבן המקדש",chapters:"מלכים ב': כא-כה",icon:"🕯️",color:"#34495E",
@@ -4507,12 +4521,12 @@ bagrutQuestions:[
 {q:"ציינו שני מעשים של אסא המעידים שעשה הישר. הביאו דוגמה למלך נוסף שעשה הישר עם שני מעשים.",answer:"<p><strong>אסא:</strong> 1. הסיר את הגילולים שעשו אבותיו. 2. הדיח את מעכה אמו מגבירה כי עשתה מפלצת לאשרה — כרת ושרף.</p><p><strong>חזקיהו:</strong> 1. הסיר את הבמות, שיבר מצבות, כרת האשרה. 2. כיתת את נחש הנחושת שעשה משה — כי ישראל מקטרים לו.</p><p>(חלופה — יאשיהו: 1. טיהר את המקדש מכלי עבודה זרה. 2. חגג פסח כמו שלא נחגג מימי השופטים.)</p>",source:'בגרות תשפ"ה, שאלה 10'}
 ],
 mapLocations:[
-{name:"ירושלים",info:"נחרבה ב-586 לפנה\"ס. המקדש נשרף, החומות נהרסו."},
-{name:"מגידו",info:"יאשיהו נהרג כאן בקרב נגד פרעה נכה."},
-{name:"ערבות יריחו",info:"צדקיהו נתפס כאן בבריחתו."},
-{name:"בבל",info:"מקום גלות יהודה — יהויכין שוחרר שם."},
-{name:"בית אל",info:"יאשיהו הרס את הבמה שבנה ירבעם — קיום נבואה!"},
-{name:"נחל קדרון",info:"יאשיהו שרף כאן את כלי עבודה הזרה מהמקדש."}
+{name:"ירושלים",info:"נחרבה ב-586 לפנה\"ס. המקדש נשרף, החומות נהרסו.",lat:31.7683,lng:35.2137},
+{name:"מגידו",info:"יאשיהו נהרג כאן בקרב נגד פרעה נכה.",lat:32.5847,lng:35.1847},
+{name:"ערבות יריחו",info:"צדקיהו נתפס כאן בבריחתו.",lat:31.8611,lng:35.4500},
+{name:"בבל",info:"מקום גלות יהודה — יהויכין שוחרר שם.",lat:32.5425,lng:44.4211},
+{name:"בית אל",info:"יאשיהו הרס את הבמה שבנה ירבעם — קיום נבואה!",lat:31.9347,lng:35.2231},
+{name:"נחל קדרון",info:"יאשיהו שרף כאן את כלי עבודה הזרה מהמקדש.",lat:31.7700,lng:35.2400}
 ]
 }
 );
@@ -4900,7 +4914,7 @@ return h;
 function renderMapSection(u){
 let h=`<h3 style="color:var(--primary);margin-bottom:1rem;font-size:1.1rem"><i class="bi bi-geo-alt-fill"></i> מקומות מרכזיים — ${u.title}</h3>`;
 u.mapLocations.forEach((loc,i)=>{
-h+=`<div class="map-card" style="animation-delay:${i*0.05}s"><div class="pin">📍</div><div><h4>${loc.name}</h4><p>${loc.info}</p></div></div>`;
+h+=`<div class="map-card" onclick="openLocationMap('${loc.name.replace(/'/g,"\\'")}','${loc.info.replace(/'/g,"\\'")}',${loc.lat},${loc.lng})" style="animation-delay:${i*0.05}s"><div class="pin">📍</div><div><h4>${loc.name}</h4><p>${loc.info}</p></div><div style="margin-right:auto;display:flex;align-items:center;color:var(--primary);font-size:.8rem;opacity:.6;white-space:nowrap"><i class="bi bi-map"></i></div></div>`;
 });
 return h;
 }
@@ -5410,6 +5424,39 @@ const hash=location.hash.slice(1);if(hash)nav(hash);
 window.addEventListener('popstate',()=>{const hash=location.hash.slice(1);if(hash)nav(hash);});
 window.addEventListener('scroll',()=>{document.getElementById('scrollTop').classList.toggle('show',window.scrollY>400);});
 document.addEventListener('click',e=>{if(!e.target.closest('#searchInput')&&!e.target.closest('#searchResults'))document.getElementById('searchResults').style.display='none';});
+// === MAP MODAL ===
+let mapInstance=null;
+function openLocationMap(name,info,lat,lng){
+let overlay=document.getElementById('mapModalOverlay');
+if(!overlay){
+overlay=document.createElement('div');
+overlay.id='mapModalOverlay';
+overlay.className='map-modal-overlay';
+overlay.innerHTML=`<div class="map-modal"><div class="map-modal-header"><h3 id="mapTitle"></h3><button class="close-map" onclick="closeLocationMap()"><i class="bi bi-x-lg"></i></button></div><div class="map-modal-info" id="mapInfo"></div><div id="mapContainer"></div></div>`;
+document.body.appendChild(overlay);
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeLocationMap();});
+}
+document.getElementById('mapTitle').textContent=name;
+document.getElementById('mapInfo').textContent=info;
+overlay.classList.add('active');
+document.body.style.overflow='hidden';
+setTimeout(()=>{
+if(mapInstance){mapInstance.remove();mapInstance=null;}
+mapInstance=L.map('mapContainer',{zoomControl:false}).setView([lat,lng],13);
+L.control.zoom({position:'topleft'}).addTo(mapInstance);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(mapInstance);
+const icon=L.divIcon({className:'custom-marker',html:'<div style="background:var(--primary,#E87722);width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center"><span style="transform:rotate(45deg);font-size:14px">📍</span></div>',iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-30]});
+L.marker([lat,lng],{icon}).addTo(mapInstance).bindPopup(`<b>${name}</b>`).openPopup();
+mapInstance.invalidateSize();
+},100);
+}
+function closeLocationMap(){
+const overlay=document.getElementById('mapModalOverlay');
+if(overlay)overlay.classList.remove('active');
+document.body.style.overflow='';
+if(mapInstance){mapInstance.remove();mapInstance=null;}
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLocationMap();});
 </script>
 </body>
 </html>
