@@ -1,0 +1,4 @@
+.venv/
+generated/
+.DS_Store
+__pycache__/

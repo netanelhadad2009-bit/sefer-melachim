@@ -163,3 +163,28 @@ CREATE TRIGGER student_progress_updated
 -- ==========================================
 -- INSERT INTO profiles (id, email, full_name, role)
 -- VALUES ('YOUR-TEACHER-UUID-HERE', 'teacher@example.com', 'הרב ברק', 'teacher');
+
+-- ==========================================
+-- STORAGE: Podcasts bucket (public)
+-- ==========================================
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('podcasts', 'podcasts', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow public read access to podcast files
+CREATE POLICY "public_podcast_read" ON storage.objects
+  FOR SELECT USING (bucket_id = 'podcasts');
+
+-- Allow authenticated users (teachers) to upload
+CREATE POLICY "teachers_upload_podcasts" ON storage.objects
+  FOR INSERT WITH CHECK (
+    bucket_id = 'podcasts'
+    AND EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'teacher')
+  );
+
+-- Allow teachers to delete podcast files
+CREATE POLICY "teachers_delete_podcasts" ON storage.objects
+  FOR DELETE USING (
+    bucket_id = 'podcasts'
+    AND EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'teacher')
+  );
