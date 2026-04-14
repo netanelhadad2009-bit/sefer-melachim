@@ -1704,6 +1704,16 @@ const GLOSSARY=[
 {term:'מנהיג ונביא',cat:'concept',def:'הנביאים כמבקרי המלך — ביקורת, הכתרה, ונבואה.',unit:3},
 {term:'ניצוץ התקווה',cat:'concept',def:'שחרור יהויכין בסוף הספר — רמז לגאולה.',unit:6}
 ];
+// ========== SECURITY HELPERS ==========
+function escapeHTML(str){
+if(str===null||str===undefined)return '';
+return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function isSafeURL(url){
+if(!url||typeof url!=='string')return false;
+const trimmed=url.trim();
+return /^https:\/\//i.test(trimmed)&&!/["'<>]/.test(trimmed);
+}
 // ========== SUPABASE ==========
 const SUPABASE_URL='https://rdxaqsgylqchdaxkicur.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkeGFxc2d5bHFjaGRheGtpY3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwOTgxNTMsImV4cCI6MjA5MTY3NDE1M30.TMB6FXP2igSgbBT-yLGbTsUr_hUhpWrsYk7Ay5KiYRQ';
@@ -1718,7 +1728,6 @@ const{data:{session}}=await sb.auth.getSession();
 if(session){
 currentUser=session.user;
 const{data:prof,error:profErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
-console.log('DEBUG checkSession: user=',currentUser.id,'prof=',prof,'err=',profErr);
 currentProfile=prof;
 onAuthReady();
 }else{
@@ -1871,10 +1880,10 @@ try{await sb.from('activity_log').insert({user_id:currentUser.id,action,metadata
 async function renderStudentProfile(){
 const el=document.getElementById('studentProfileContent');
 if(!currentUser||!currentProfile){el.innerHTML='';return;}
-const initials=currentProfile.full_name.split(' ').map(w=>w[0]).join('').slice(0,2);
+const initials=escapeHTML(currentProfile.full_name.split(' ').map(w=>w[0]).join('').slice(0,2));
 let h=`<div class="profile-header">
 <div class="avatar">${initials}</div>
-<div class="info"><h3>${currentProfile.full_name}</h3><p>${currentProfile.class_name||'ללא כיתה'} | ${currentProfile.email}</p></div>
+<div class="info"><h3>${escapeHTML(currentProfile.full_name)}</h3><p>${escapeHTML(currentProfile.class_name||'ללא כיתה')} | ${escapeHTML(currentProfile.email)}</p></div>
 </div>`;
 // Progress per unit
 h+='<h3 style="margin-bottom:.8rem"><i class="bi bi-bar-chart"></i> התקדמות ביחידות</h3>';
@@ -1907,7 +1916,7 @@ h+='<table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תארי
 const gameNames={map:'מפה',kings:'מלכים',timeline:'ציר זמן',quotes:'ציטוטים',pictures:'חידות תמונה'};
 games.forEach(g=>{
 const d=new Date(g.completed_at).toLocaleDateString('he-IL');
-h+=`<tr><td>${gameNames[g.game_type]||g.game_type}</td><td>${g.score_percent}%</td><td>${d}</td></tr>`;
+h+=`<tr><td>${escapeHTML(gameNames[g.game_type]||g.game_type)}</td><td>${parseInt(g.score_percent)||0}%</td><td>${escapeHTML(d)}</td></tr>`;
 });
 h+='</table>';
 }else h+='<p style="color:var(--text-light)">עדיין אין ציוני משחקים</p>';
@@ -1985,11 +1994,11 @@ h+='<div style="margin-bottom:1rem"><input type="text" id="dashSearchInput" plac
 h+='<table class="dash-table" id="dashStudentTable"><tr><th>שם</th><th>כיתה</th><th>התקדמות</th><th>פעילות אחרונה</th><th>סטטוס</th></tr>';
 dashStudents.forEach(s=>{
 const lastDate=s.lastActivity?new Date(s.lastActivity).toLocaleDateString('he-IL'):'לא היתה';
-h+=`<tr class="clickable" onclick="showStudentDetail('${s.id}')">
-<td>${s.full_name}</td>
-<td>${s.class_name||'-'}</td>
-<td><span class="progress-mini"><span class="fill" style="width:${s.overallPct}%"></span></span> ${s.overallPct}%</td>
-<td>${lastDate}</td>
+h+=`<tr class="clickable" onclick="showStudentDetail('${escapeHTML(s.id)}')">
+<td>${escapeHTML(s.full_name)}</td>
+<td>${escapeHTML(s.class_name||'-')}</td>
+<td><span class="progress-mini"><span class="fill" style="width:${parseInt(s.overallPct)||0}%"></span></span> ${parseInt(s.overallPct)||0}%</td>
+<td>${escapeHTML(lastDate)}</td>
 <td><span class="status-badge ${s.is_active?'active':'inactive'}">${s.is_active?'פעיל':'מושבת'}</span></td>
 </tr>`;
 });
@@ -2003,7 +2012,7 @@ for(const a of recentActs){
 const student=dashStudents.find(s=>s.id===a.user_id);
 const name=student?.full_name||'תלמיד';
 const d=new Date(a.created_at).toLocaleString('he-IL');
-h+=`<div class="activity-item"><div class="act-text"><strong>${name}</strong> ${actionNames[a.action]||a.action}</div><div class="act-time">${d}</div></div>`;
+h+=`<div class="activity-item"><div class="act-text"><strong>${escapeHTML(name)}</strong> ${escapeHTML(actionNames[a.action]||a.action)}</div><div class="act-time">${escapeHTML(d)}</div></div>`;
 }
 h+='</div></div>';
 }
@@ -2015,7 +2024,7 @@ for(const q of lowQuizzes){
 const student=dashStudents.find(s=>s.id===q.user_id);
 if(!student)continue;
 const d=new Date(q.completed_at).toLocaleDateString('he-IL');
-h+=`<div class="dash-alert-card"><span class="alert-name">${student.full_name}</span> — יחידה ${q.unit_id}, ${q.mode==='exam'?'בחינה':'תרגול'}: <strong>${q.score_percent}%</strong> (${q.correct_count}/${q.total_count}) — ${d}</div>`;
+h+=`<div class="dash-alert-card"><span class="alert-name">${escapeHTML(student.full_name)}</span> — יחידה ${parseInt(q.unit_id)||0}, ${q.mode==='exam'?'בחינה':'תרגול'}: <strong>${parseInt(q.score_percent)||0}%</strong> (${parseInt(q.correct_count)||0}/${parseInt(q.total_count)||0}) — ${escapeHTML(d)}</div>`;
 }
 h+='</div>';
 }
@@ -2034,11 +2043,11 @@ if(!dashSelectedStudent)return;
 showDashTab('detail',document.querySelectorAll('#dashTabs .sub-tab')[1]);
 const el=document.getElementById('dashDetail');
 el.innerHTML='<p style="color:var(--text-light)">טוען...</p>';
-const initials=dashSelectedStudent.full_name.split(' ').map(w=>w[0]).join('').slice(0,2);
+const initials=escapeHTML(dashSelectedStudent.full_name.split(' ').map(w=>w[0]).join('').slice(0,2));
 let h=`<button class="btn-back" onclick="showDashTab('overview',document.querySelectorAll('#dashTabs .sub-tab')[0])"><i class="bi bi-arrow-right"></i> חזרה לרשימה</button>`;
 h+=`<div class="profile-header">
 <div class="avatar">${initials}</div>
-<div class="info"><h3>${dashSelectedStudent.full_name}</h3><p>${dashSelectedStudent.class_name||'ללא כיתה'} | ${dashSelectedStudent.email}</p></div>
+<div class="info"><h3>${escapeHTML(dashSelectedStudent.full_name)}</h3><p>${escapeHTML(dashSelectedStudent.class_name||'ללא כיתה')} | ${escapeHTML(dashSelectedStudent.email)}</p></div>
 </div>`;
 // Per-unit progress
 h+='<div class="detail-card"><h4><i class="bi bi-bar-chart"></i> התקדמות ביחידות</h4>';
@@ -2055,7 +2064,7 @@ if(quizzes&&quizzes.length>0){
 h+='<table class="dash-table"><tr><th>יחידה</th><th>מצב</th><th>נכונות</th><th>ציון</th><th>תאריך</th></tr>';
 quizzes.forEach(q=>{
 const d=new Date(q.completed_at).toLocaleDateString('he-IL');
-h+=`<tr><td>יחידה ${q.unit_id}</td><td>${q.mode==='exam'?'בחינה':'תרגול'}</td><td>${q.correct_count}/${q.total_count}</td><td>${q.score_percent}%</td><td>${d}</td></tr>`;
+h+=`<tr><td>יחידה ${parseInt(q.unit_id)||0}</td><td>${q.mode==='exam'?'בחינה':'תרגול'}</td><td>${parseInt(q.correct_count)||0}/${parseInt(q.total_count)||0}</td><td>${parseInt(q.score_percent)||0}%</td><td>${escapeHTML(d)}</td></tr>`;
 });
 h+='</table>';
 }else h+='<p style="color:var(--text-light)">אין ניסיונות</p>';
@@ -2068,7 +2077,7 @@ h+='<table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תארי
 const gameNames={map:'מפה',kings:'מלכים',timeline:'ציר זמן',quotes:'ציטוטים',pictures:'חידות תמונה'};
 games.forEach(g=>{
 const d=new Date(g.completed_at).toLocaleDateString('he-IL');
-h+=`<tr><td>${gameNames[g.game_type]||g.game_type}</td><td>${g.score_percent}%</td><td>${d}</td></tr>`;
+h+=`<tr><td>${escapeHTML(gameNames[g.game_type]||g.game_type)}</td><td>${parseInt(g.score_percent)||0}%</td><td>${escapeHTML(d)}</td></tr>`;
 });
 h+='</table>';
 }else h+='<p style="color:var(--text-light)">אין ציונים</p>';
@@ -2082,7 +2091,7 @@ h+='<table class="dash-table"><tr><th>פעולה</th><th>פרטים</th><th>תא
 acts.forEach(a=>{
 const d=new Date(a.created_at).toLocaleString('he-IL');
 const meta=a.metadata?JSON.stringify(a.metadata).replace(/[{}"]/g,'').replace(/,/g,', '):'';
-h+=`<tr><td>${actionNames[a.action]||a.action}</td><td style="font-size:.8rem">${meta}</td><td>${d}</td></tr>`;
+h+=`<tr><td>${escapeHTML(actionNames[a.action]||a.action)}</td><td style="font-size:.8rem">${escapeHTML(meta)}</td><td>${escapeHTML(d)}</td></tr>`;
 });
 h+='</table>';
 }else h+='<p style="color:var(--text-light)">אין פעילות</p>';
@@ -2120,7 +2129,7 @@ if(inactiveStudents.length>0){
 h+='<table class="dash-table"><tr><th>שם</th><th>כיתה</th><th>פעילות אחרונה</th></tr>';
 inactiveStudents.forEach(s=>{
 const d=s.lastActivity?new Date(s.lastActivity).toLocaleDateString('he-IL'):'מעולם לא';
-h+=`<tr><td>${s.full_name}</td><td>${s.class_name||'-'}</td><td>${d}</td></tr>`;
+h+=`<tr><td>${escapeHTML(s.full_name)}</td><td>${escapeHTML(s.class_name||'-')}</td><td>${escapeHTML(d)}</td></tr>`;
 });
 h+='</table>';
 }else h+='<p style="color:var(--success)">כל התלמידים פעילים!</p>';
@@ -2137,7 +2146,7 @@ h+='<div class="detail-card"><h4><i class="bi bi-people"></i> סיכום לפי 
 h+='<table class="dash-table"><tr><th>כיתה</th><th>תלמידים</th><th>ממוצע התקדמות</th></tr>';
 Object.entries(classes).forEach(([c,d])=>{
 const avg=Math.round(d.totalPct/d.students);
-h+=`<tr><td>${c}</td><td>${d.students}</td><td><span class="progress-mini"><span class="fill" style="width:${avg}%"></span></span> ${avg}%</td></tr>`;
+h+=`<tr><td>${escapeHTML(c)}</td><td>${parseInt(d.students)||0}</td><td><span class="progress-mini"><span class="fill" style="width:${parseInt(avg)||0}%"></span></span> ${parseInt(avg)||0}%</td></tr>`;
 });
 h+='</table></div>';
 el.innerHTML=h;
@@ -2155,12 +2164,15 @@ h+='<h3 style="margin-bottom:.8rem"><i class="bi bi-people"></i> תלמידים 
 if(dashStudents.length>0){
 h+='<table class="dash-table"><tr><th>שם</th><th>אימייל</th><th>כיתה</th><th>סטטוס</th><th>פעולות</th></tr>';
 dashStudents.forEach(s=>{
+const safeId=escapeHTML(s.id);
+const safeName=escapeHTML(s.full_name);
+const safeNameAttr=escapeHTML(String(s.full_name).replace(/'/g,''));
 h+=`<tr>
-<td>${s.full_name}</td>
-<td style="direction:ltr;text-align:right">${s.email}</td>
-<td>${s.class_name||'-'}</td>
+<td>${safeName}</td>
+<td style="direction:ltr;text-align:right">${escapeHTML(s.email)}</td>
+<td>${escapeHTML(s.class_name||'-')}</td>
 <td><span class="status-badge ${s.is_active?'active':'inactive'}">${s.is_active?'פעיל':'מושבת'}</span></td>
-<td><button class="btn-action" onclick="toggleStudentActive('${s.id}',${!s.is_active})">${s.is_active?'השבת':'הפעל'}</button> <button class="btn-action danger" onclick="deleteStudent('${s.id}','${s.full_name}')">מחק</button></td>
+<td><button class="btn-action" onclick="toggleStudentActive('${safeId}',${!s.is_active})">${s.is_active?'השבת':'הפעל'}</button> <button class="btn-action danger" onclick="deleteStudent('${safeId}','${safeNameAttr}')">מחק</button></td>
 </tr>`;
 });
 h+='</table>';
@@ -2195,7 +2207,7 @@ document.getElementById('newStudentClass').value='';
 dashStudents=await fetchAllStudents();
 renderDashManage();
 }catch(e){
-msg.textContent='שגיאה: '+e.message;msg.classList.add('error');
+console.error(e);msg.textContent='שגיאה ביצירת התלמיד, נסה שוב';msg.classList.add('error');
 }
 }
 
@@ -2278,7 +2290,7 @@ h+='<textarea id="annBody" placeholder="תוכן ההודעה..."></textarea>';
 h+='<div class="form-row-3" style="margin-top:.8rem">';
 h+='<select id="annPriority"><option value="normal">רגילה</option><option value="important">חשובה</option><option value="urgent">דחופה</option></select>';
 h+='<select id="annTarget"><option value="">כל התלמידים</option>';
-classes.forEach(c=>{h+=`<option value="${c}">${c}</option>`;});
+classes.forEach(c=>{const sc=escapeHTML(c);h+=`<option value="${sc}">${sc}</option>`;});
 h+='</select>';
 h+='<label style="display:flex;align-items:center;gap:.4rem;font-size:.9rem;cursor:pointer"><input type="checkbox" id="annPinned"> נעוצה</label></div>';
 h+='<button class="btn-add" onclick="createAnnouncement()" style="margin-top:.5rem">פרסם הודעה</button>';
@@ -2287,13 +2299,16 @@ const{data:anns}=await sb.from('announcements').select('*').order('is_pinned',{a
 h+='<h3 style="margin:1.5rem 0 .8rem"><i class="bi bi-list-ul"></i> הודעות קיימות</h3>';
 if(anns&&anns.length>0){anns.forEach(a=>{const d=new Date(a.created_at).toLocaleDateString('he-IL');
 const pCls=a.priority==='urgent'?'urgent':a.priority==='important'?'important':'';
-const badges=(a.is_pinned?'<span class="ann-badge pinned"><i class="bi bi-pin-angle-fill"></i> נעוצה</span>':'')+(a.priority!=='normal'?`<span class="ann-badge ${a.priority}">${a.priority==='urgent'?'דחופה':'חשובה'}</span>`:'')+(a.target_class?`<span class="ann-badge" style="background:var(--bg2);color:var(--text-light)">${a.target_class}</span>`:'')+(!a.is_active?'<span class="ann-badge" style="background:var(--error-light);color:var(--error)">מושבתת</span>':'');
-h+=`<div class="announcement-card ${pCls}"><div class="ann-header"><span class="ann-title">${a.title} ${badges}</span><span class="ann-date">${d}</span></div><div class="ann-body">${a.body}</div><div class="ann-actions"><button class="btn-action" onclick="toggleAnnouncementActive('${a.id}',${!a.is_active})">${a.is_active?'השבת':'הפעל'}</button><button class="btn-action" onclick="toggleAnnouncementPin('${a.id}',${!a.is_pinned})">${a.is_pinned?'בטל נעיצה':'נעץ'}</button><button class="btn-action danger" onclick="deleteAnnouncement('${a.id}')">מחק</button></div></div>`;});}else{h+='<p style="color:var(--text-light)">אין הודעות עדיין.</p>';}
+const safePriority=['urgent','important','normal'].includes(a.priority)?a.priority:'normal';
+const safeId=escapeHTML(a.id);
+const badges=(a.is_pinned?'<span class="ann-badge pinned"><i class="bi bi-pin-angle-fill"></i> נעוצה</span>':'')+(safePriority!=='normal'?`<span class="ann-badge ${safePriority}">${safePriority==='urgent'?'דחופה':'חשובה'}</span>`:'')+(a.target_class?`<span class="ann-badge" style="background:var(--bg2);color:var(--text-light)">${escapeHTML(a.target_class)}</span>`:'')+(!a.is_active?'<span class="ann-badge" style="background:var(--error-light);color:var(--error)">מושבתת</span>':'');
+h+=`<div class="announcement-card ${pCls}"><div class="ann-header"><span class="ann-title">${escapeHTML(a.title)} ${badges}</span><span class="ann-date">${escapeHTML(d)}</span></div><div class="ann-body">${escapeHTML(a.body)}</div><div class="ann-actions"><button class="btn-action" onclick="toggleAnnouncementActive('${safeId}',${!a.is_active})">${a.is_active?'השבת':'הפעל'}</button><button class="btn-action" onclick="toggleAnnouncementPin('${safeId}',${!a.is_pinned})">${a.is_pinned?'בטל נעיצה':'נעץ'}</button><button class="btn-action danger" onclick="deleteAnnouncement('${safeId}')">מחק</button></div></div>`;});}else{h+='<p style="color:var(--text-light)">אין הודעות עדיין.</p>';}
 el.innerHTML=h;}
 async function createAnnouncement(){const title=document.getElementById('annTitle').value.trim();const body=document.getElementById('annBody').value.trim();const priority=document.getElementById('annPriority').value;const target=document.getElementById('annTarget').value||null;const pinned=document.getElementById('annPinned').checked;const msg=document.getElementById('annMsg');msg.textContent='';msg.className='form-msg';
 if(!title||!body){msg.textContent='יש למלא כותרת ותוכן';msg.classList.add('error');return;}
+if(title.length>200||body.length>2000){msg.textContent='כותרת/תוכן ארוכים מדי';msg.classList.add('error');return;}
 const{error}=await sb.from('announcements').insert({teacher_id:currentUser.id,title,body,priority,target_class:target,is_pinned:pinned});
-if(error){msg.textContent='שגיאה: '+error.message;msg.classList.add('error');return;}
+if(error){console.error(error);msg.textContent='שגיאה בפרסום ההודעה, נסה שוב';msg.classList.add('error');return;}
 msg.textContent='ההודעה פורסמה!';msg.classList.add('success');document.getElementById('annTitle').value='';document.getElementById('annBody').value='';document.getElementById('annPinned').checked=false;renderDashAnnouncements();}
 async function toggleAnnouncementActive(id,active){await sb.from('announcements').update({is_active:active}).eq('id',id);renderDashAnnouncements();}
 async function toggleAnnouncementPin(id,pinned){await sb.from('announcements').update({is_pinned:pinned}).eq('id',id);renderDashAnnouncements();}
@@ -2315,12 +2330,20 @@ const{data:mats}=await sb.from('teacher_materials').select('*').order('created_a
 h+='<h3 style="margin:1.5rem 0 .8rem"><i class="bi bi-collection"></i> חומרים קיימים</h3>';
 if(mats&&mats.length>0){const typeIcons={pdf:'bi-file-pdf',video:'bi-play-circle',link:'bi-link-45deg',document:'bi-file-text',other:'bi-file-earmark'};
 mats.forEach(m=>{const d=new Date(m.created_at).toLocaleDateString('he-IL');
-h+=`<div class="material-card" style="margin-bottom:.6rem;cursor:default"><div class="mat-icon ${m.material_type}"><i class="bi ${typeIcons[m.material_type]||'bi-file-earmark'}"></i></div><div style="flex:1"><strong>${m.title}</strong>${m.unit_id?' (יחידה '+m.unit_id+')':' (כללי)'}<br><span style="font-size:.82rem;color:var(--text-light)">${m.description||''}</span><br><a href="${m.url}" target="_blank" style="font-size:.8rem">${m.url.substring(0,50)}${m.url.length>50?'...':''}</a> <span style="font-size:.75rem;color:var(--text-light)">${d}</span></div><div style="display:flex;gap:.3rem"><button class="btn-action" onclick="toggleMaterialActive('${m.id}',${!m.is_active})">${m.is_active?'השבת':'הפעל'}</button><button class="btn-action danger" onclick="deleteTeacherMaterial('${m.id}')">מחק</button></div></div>`;});}else{h+='<p style="color:var(--text-light)">אין חומרים עדיין.</p>';}
+const safeUrl=isSafeURL(m.url)?encodeURI(m.url):'#';
+const safeType=escapeHTML(m.material_type);
+const safeId=escapeHTML(m.id);
+const icon=escapeHTML(typeIcons[m.material_type]||'bi-file-earmark');
+const urlPreview=escapeHTML(String(m.url||'').substring(0,50));
+const urlHasMore=(m.url||'').length>50?'...':'';
+h+=`<div class="material-card" style="margin-bottom:.6rem;cursor:default"><div class="mat-icon ${safeType}"><i class="bi ${icon}"></i></div><div style="flex:1"><strong>${escapeHTML(m.title)}</strong>${m.unit_id?' (יחידה '+(parseInt(m.unit_id)||0)+')':' (כללי)'}<br><span style="font-size:.82rem;color:var(--text-light)">${escapeHTML(m.description||'')}</span><br><a href="${safeUrl}" target="_blank" rel="noopener noreferrer" style="font-size:.8rem">${urlPreview}${urlHasMore}</a> <span style="font-size:.75rem;color:var(--text-light)">${escapeHTML(d)}</span></div><div style="display:flex;gap:.3rem"><button class="btn-action" onclick="toggleMaterialActive('${safeId}',${!m.is_active})">${m.is_active?'השבת':'הפעל'}</button><button class="btn-action danger" onclick="deleteTeacherMaterial('${safeId}')">מחק</button></div></div>`;});}else{h+='<p style="color:var(--text-light)">אין חומרים עדיין.</p>';}
 el.innerHTML=h;}
 async function addTeacherMaterial(){const title=document.getElementById('matTitle').value.trim();const desc=document.getElementById('matDesc').value.trim();const url=document.getElementById('matUrl').value.trim();const type=document.getElementById('matType').value;const unit=document.getElementById('matUnit').value||null;const msg=document.getElementById('matMsg');msg.textContent='';msg.className='form-msg';
 if(!title||!url){msg.textContent='יש למלא שם וקישור';msg.classList.add('error');return;}
+if(!isSafeURL(url)){msg.textContent='קישור חייב להתחיל ב-https:// ולא להכיל תווים מיוחדים';msg.classList.add('error');return;}
+if(title.length>200||desc.length>500){msg.textContent='שם/תיאור ארוכים מדי';msg.classList.add('error');return;}
 const{error}=await sb.from('teacher_materials').insert({teacher_id:currentUser.id,title,description:desc||null,url,material_type:type,unit_id:unit?parseInt(unit):null});
-if(error){msg.textContent='שגיאה: '+error.message;msg.classList.add('error');return;}
+if(error){console.error(error);msg.textContent='שגיאה בהוספת החומר, נסה שוב';msg.classList.add('error');return;}
 msg.textContent='החומר נוסף!';msg.classList.add('success');document.getElementById('matTitle').value='';document.getElementById('matDesc').value='';document.getElementById('matUrl').value='';renderDashMaterials();}
 async function toggleMaterialActive(id,active){await sb.from('teacher_materials').update({is_active:active}).eq('id',id);renderDashMaterials();}
 async function deleteTeacherMaterial(id){if(!confirm('למחוק את החומר?'))return;await sb.from('teacher_materials').delete().eq('id',id);renderDashMaterials();}
@@ -2330,14 +2353,22 @@ const{data:anns}=await sb.from('announcements').select('*').eq('is_active',true)
 if(!anns||anns.length===0){el.style.display='none';return;}
 el.style.display='block';let h='<h4 style="margin-bottom:.8rem;color:var(--secondary)"><i class="bi bi-megaphone"></i> הודעות מהמורה</h4>';
 anns.forEach(a=>{const d=new Date(a.created_at).toLocaleDateString('he-IL');const cls=a.priority==='urgent'?'urgent':a.priority==='important'?'important':'';
-h+=`<div class="student-announcement-banner ${cls}"><strong>${a.title}</strong> ${a.is_pinned?'<i class="bi bi-pin-angle-fill" style="color:var(--secondary)"></i>':''}<span style="float:left;font-size:.78rem;color:var(--text-light)">${d}</span><p style="margin:.4rem 0 0;font-size:.9rem">${a.body}</p></div>`;});
+h+=`<div class="student-announcement-banner ${cls}"><strong>${escapeHTML(a.title)}</strong> ${a.is_pinned?'<i class="bi bi-pin-angle-fill" style="color:var(--secondary)"></i>':''}<span style="float:left;font-size:.78rem;color:var(--text-light)">${escapeHTML(d)}</span><p style="margin:.4rem 0 0;font-size:.9rem">${escapeHTML(a.body)}</p></div>`;});
 el.innerHTML=h;}
 async function loadTeacherMaterials(){const el=document.getElementById('teacherMaterialsList');if(!el){return;}if(isGuest){el.innerHTML='';return;}
 const{data:mats}=await sb.from('teacher_materials').select('*').eq('is_active',true).order('created_at',{ascending:false});
 if(!mats||mats.length===0){el.innerHTML='';return;}
 const typeIcons={pdf:'bi-file-pdf',video:'bi-play-circle',link:'bi-link-45deg',document:'bi-file-text',other:'bi-file-earmark'};
 let h='<div class="col-12"><h4 style="color:var(--primary);margin-top:1rem"><i class="bi bi-folder-plus"></i> חומרים נוספים מהמורה</h4></div>';
-mats.forEach(m=>{h+=`<div class="col-12 col-md-6"><div class="material-card" onclick="window.open('${m.url}','_blank')"><div class="mat-icon ${m.material_type}"><i class="bi ${typeIcons[m.material_type]||'bi-file-earmark'}"></i></div><div><strong>${m.title}</strong>${m.unit_id?' (יחידה '+m.unit_id+')':''}<br><span style="font-size:.82rem;color:var(--text-light)">${m.description||''}</span></div></div></div>`;});
+mats.forEach(m=>{
+const safeUrl=isSafeURL(m.url)?encodeURI(m.url):'#';
+const safeType=escapeHTML(m.material_type);
+const safeTitle=escapeHTML(m.title);
+const safeDesc=escapeHTML(m.description||'');
+const safeUnit=m.unit_id?' (יחידה '+parseInt(m.unit_id)+')':'';
+const icon=escapeHTML(typeIcons[m.material_type]||'bi-file-earmark');
+h+=`<div class="col-12 col-md-6"><div class="material-card" onclick="window.open('${safeUrl}','_blank','noopener,noreferrer')"><div class="mat-icon ${safeType}"><i class="bi ${icon}"></i></div><div><strong>${safeTitle}</strong>${safeUnit}<br><span style="font-size:.82rem;color:var(--text-light)">${safeDesc}</span></div></div></div>`;
+});
 el.innerHTML=h;}
 // ========== STATE MANAGEMENT ==========
 let state={
