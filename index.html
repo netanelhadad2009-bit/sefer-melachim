@@ -1387,7 +1387,7 @@ quotes:[
 {text:"וַיִּתְאַנַּף ה' מְאֹד בְּיִשְׂרָאֵל וַיְסִרֵם מֵעַל פָּנָיו",speaker:"הכתוב",to:"על ישראל",context:"סיכום סיבות חורבן ממלכת ישראל",options:["הכתוב","ישעיהו","אליהו","הושע"]},
 {text:"הַחוֹחַ אֲשֶׁר בַּלְּבָנוֹן שָׁלַח אֶל הָאֶרֶז תְּנָה אֶת בִּתְּךָ לִבְנִי",speaker:"יואש מלך ישראל",to:"אמציהו",context:"משל — אל תתגרה בחזק ממך",options:["יואש מלך ישראל","שלמה","אליהו","ירבעם"]},
 {text:"כִּי גְדוֹלָה חֲמַת ה'... עַל אֲשֶׁר לֹא שָׁמְעוּ אֲבֹתֵינוּ",speaker:"יאשיהו",to:"שריו",context:"לאחר שמיעת דברי ספר התורה — קרע בגדיו",options:["יאשיהו","חזקיהו","שלמה","צדקיהו"]},
-{text:"יַעַן רַךְ לְבָבְךָ וַתִּכָּנַע מִפְּנֵי ה'",speaker:"חולדה הנביאה",to:"ליאשיהו",context:"נבואה שהרעה לא תבוא בימיו",options:["חולדה","ישעיהו","ירמיהו","דבורה"]},
+{text:"יַעַן רַךְ לְבָבְךָ וַתִּכָּנַע מִפְּנֵי ה'",speaker:"חולדה",to:"ליאשיהו",context:"נבואה שהרעה לא תבוא בימיו",options:["חולדה","ישעיהו","ירמיהו","דבורה"]},
 {text:"עַבְדְּךָ וּבִנְךָ אָנִי — עֲלֵה וְהוֹשִׁעֵנִי",speaker:"אחז",to:"תגלת פלאסר מלך אשור",context:"בקשת עזרה מאשור נגד ארם וישראל",options:["אחז","חזקיהו","צדקיהו","מנחם"]}
 ]
 };
@@ -3159,8 +3159,12 @@ map.fitBounds(group.getBounds().pad(0.15));
 h+=`<div style="text-align:center;margin-bottom:1.5rem">
 <div style="font-size:3rem;margin-bottom:.5rem;animation:bounceIn .5s ease">💬</div>
 <div style="font-size:1.2rem;font-weight:700;line-height:1.9;padding:1rem 1.5rem;background:var(--primary-light);border-radius:var(--radius);border:2px solid var(--primary);direction:rtl;max-width:500px;margin:0 auto">"${q.text}"</div>
-${q.to?`<p style="color:var(--text-light);margin-top:.5rem;font-size:.9rem">נאמר ל: <strong>${q.to}</strong></p>`:''}
-<p style="color:var(--text-light);margin-top:.3rem;font-size:.85rem">${q.context}</p>
+<div style="margin-top:.8rem;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+${q.to?`<button type="button" class="btn btn-sm btn-outline-secondary" onclick="revealHint(this,'to')">💡 רמז: למי נאמר?</button>`:''}
+<button type="button" class="btn btn-sm btn-outline-secondary" onclick="revealHint(this,'ctx')">💡 רמז: הקשר</button>
+</div>
+<p id="hint-to" style="display:none;color:var(--text-light);margin-top:.5rem;font-size:.9rem">נאמר ל: <strong>${q.to||''}</strong></p>
+<p id="hint-ctx" style="display:none;color:var(--text-light);margin-top:.3rem;font-size:.85rem">${q.context}</p>
 </div>
 <p style="text-align:center;font-weight:700;margin-bottom:.8rem">מי אמר את הדברים?</p>
 <div class="game-options">`;
@@ -3169,6 +3173,11 @@ h+='</div>';
 }
 h+='<div id="gameFb" style="margin-top:.8rem"></div></div>';
 area.innerHTML=h;
+}
+function revealHint(btn,type){
+const el=document.getElementById(type==='to'?'hint-to':'hint-ctx');
+if(el)el.style.display='block';
+btn.disabled=true;btn.style.opacity='.5';
 }
 function checkGameAns(ans,btn){
 const q=gameState.questions[gameState.current];
@@ -3810,5 +3819,7 @@ if(e.key==='ArrowLeft')changePage(uid,1); // next (RTL)
 else if(e.key==='ArrowRight')changePage(uid,-1); // prev (RTL)
 });
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
