@@ -2625,11 +2625,13 @@ const q=u.americanQuestions[qi];
 const letters=['א','ב','ג','ד'];
 const qs=quizState[uid];
 const ans=qs?qs.answers[qi]:null;
+const shuffled=getShuffledIndices(uid,qi,q.options.length);
 let h=`<div class="quiz-q" id="qq-${uid}-${qi}"><h4><span class="q-num">${qi+1}</span>${q.q}</h4><div>`;
-q.options.forEach((opt,oi)=>{
+shuffled.forEach((origIdx,displayIdx)=>{
+const opt=q.options[origIdx];
 let cls='opt-btn';let dis='';
-if(ans){dis='disabled';if(oi===q.correct)cls+=' correct';if(oi===ans.selected&&!ans.isCorrect)cls+=' wrong';}
-h+=`<button class="${cls}" ${dis} onclick="checkAnswer(${uid},${qi},${oi},this)"><span class="letter">${letters[oi]}</span>${opt}</button>`;
+if(ans){dis='disabled';if(origIdx===q.correct)cls+=' correct';if(origIdx===ans.selected&&!ans.isCorrect)cls+=' wrong';}
+h+=`<button class="${cls}" ${dis} onclick="checkAnswer(${uid},${qi},${origIdx},this)"><span class="letter">${letters[displayIdx]}</span>${opt}</button>`;
 });
 h+=`</div><div class="feedback" id="fb-${uid}-${qi}"`;
 if(ans&&qs.mode==='practice'){
@@ -2940,12 +2942,23 @@ const u=UNITS.find(x=>x.id===uid);if(!u)return;
 state.currentPages[uid]=Math.max(0,Math.min(pageIdx,u.pages.length-1));
 changePage(uid,0);
 }
-// ========== QUIZ (questions are FIXED — same order every time) ==========
+// ========== QUIZ ==========
 let quizState={};
+let quizShuffleMap={}; // quizShuffleMap[uid][qi] = shuffled indices array
 let bagrutState={};
+function getShuffledIndices(uid,qi,optLen){
+if(!quizShuffleMap[uid])quizShuffleMap[uid]={};
+if(!quizShuffleMap[uid][qi]){
+const arr=Array.from({length:optLen},(_,i)=>i);
+for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+quizShuffleMap[uid][qi]=arr;
+}
+return quizShuffleMap[uid][qi];
+}
 function setQuizMode(uid,mode,btn){
 btn.closest('.quiz-mode-btns').querySelectorAll('.quiz-mode-btn').forEach(b=>b.classList.remove('active'));
 btn.classList.add('active');
+quizShuffleMap[uid]={};
 quizState[uid]={mode,answered:0,correct:0,answers:[],currentQ:0};
 document.getElementById(`qprog-${uid}`).style.width='0%';
 document.getElementById(`quizSummary-${uid}`).style.display='none';
@@ -2965,7 +2978,8 @@ const isCorrect=oi===q.correct;
 if(isCorrect)qs.correct++;
 qs.answers[qi]={selected:oi,correct:q.correct,isCorrect};
 const btns=btn.parentElement.querySelectorAll('.opt-btn');
-btns.forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');});
+const shuffled=getShuffledIndices(uid,qi,q.options.length);
+btns.forEach((b,displayIdx)=>{b.disabled=true;if(shuffled[displayIdx]===q.correct)b.classList.add('correct');});
 if(!isCorrect)btn.classList.add('wrong');
 state.progress[uid].quiz=qs.answered;saveState();updateProgress();renderHomeCards();checkMilestones();renderWrongAnswersBtn();
 const total=u.americanQuestions.length;
@@ -3119,7 +3133,7 @@ ${q.to?`<p style="color:var(--text-light);margin-top:.5rem;font-size:.9rem">נא
 </div>
 <p style="text-align:center;font-weight:700;margin-bottom:.8rem">מי אמר את הדברים?</p>
 <div class="game-options">`;
-q.options.forEach(opt=>{h+=`<button class="game-opt" onclick="checkGameAns('${opt}',this)">${opt}</button>`;});
+[...q.options].sort(()=>Math.random()-.5).forEach(opt=>{h+=`<button class="game-opt" onclick="checkGameAns('${opt}',this)">${opt}</button>`;});
 h+='</div>';
 }
 h+='<div id="gameFb" style="margin-top:.8rem"></div></div>';
@@ -3651,12 +3665,16 @@ let h=`<section class="section active" style="display:block;opacity:1"><div clas
 <h2 style="color:var(--primary);margin:0"><i class="bi bi-arrow-repeat"></i> חזרה על שגיאות</h2>
 <button class="show-ans-btn" onclick="nav('home')"><i class="bi bi-house"></i> חזור לדף הבית</button></div>
 <p style="color:var(--text-light);margin-bottom:1.5rem">${wrong.length} שאלות שטעית בהן — נסה שוב!</p>`;
+const wrShuffles=[];
 wrong.forEach((w,i)=>{
 const letters=['א','ב','ג','ד'];
+const arr=Array.from({length:w.options.length},(_,j)=>j);
+for(let k=arr.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[arr[k],arr[j]]=[arr[j],arr[k]];}
+wrShuffles.push(arr);
 h+=`<div class="quiz-q" id="wr-${i}"><h4><span class="q-num">${i+1}</span>${w.q}</h4>
 <p style="font-size:.78rem;color:var(--text-light);margin-bottom:.6rem">${w.unitTitle}</p>`;
-w.options.forEach((o,oi)=>{
-h+=`<button class="opt-btn" onclick="checkWrongReview(${i},${oi},${w.correct},this)"><span class="letter">${letters[oi]}</span>${o}</button>`;
+arr.forEach((origIdx,displayIdx)=>{
+h+=`<button class="opt-btn" data-oi="${origIdx}" onclick="checkWrongReview(${i},${origIdx},${w.correct},this)"><span class="letter">${letters[displayIdx]}</span>${w.options[origIdx]}</button>`;
 });
 h+=`<div class="feedback" id="wr-fb-${i}"></div></div>`;
 });
@@ -3674,7 +3692,7 @@ if(container.classList.contains('answered'))return;
 container.classList.add('answered');
 const isCorrect=selected===correct;
 const btns=btn.parentElement.querySelectorAll('.opt-btn');
-btns.forEach((b,i)=>{b.disabled=true;if(i===correct)b.classList.add('correct');});
+btns.forEach(b=>{b.disabled=true;if(parseInt(b.dataset.oi)===correct)b.classList.add('correct');});
 if(!isCorrect)btn.classList.add('wrong');
 const fb=document.getElementById(`wr-fb-${idx}`);
 fb.className=`feedback show ${isCorrect?'correct-fb':'wrong-fb'}`;
