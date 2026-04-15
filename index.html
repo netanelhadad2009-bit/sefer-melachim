@@ -16,7 +16,9 @@
 [data-theme=dark]{--bg:#1A1D23;--bg2:#22262E;--primary:#F0923A;--primary-light:#2E2518;--primary-dark:#F5A352;--secondary:#5B9BE6;--secondary-light:#1C2A3C;--text:#E4E2DE;--text-light:#9C9488;--card:#272B34;--border:#3A3E47;--shadow:0 4px 20px rgba(0,0,0,.3);--shadow-lg:0 8px 32px rgba(0,0,0,.4)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{font-family:'Assistant',system-ui,sans-serif;font-size:16px;line-height:1.75;background:var(--bg);color:var(--text);margin:0;padding-top:60px;transition:background var(--transition),color var(--transition)}
+body{font-family:'Assistant',system-ui,sans-serif;font-size:16px;line-height:1.75;background:var(--bg);color:var(--text);margin:0;padding-top:60px;transition:background var(--transition),color var(--transition);overflow-x:hidden}
+.table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:1rem}
+.dash-table{width:100%;min-width:480px}
 section[id],.quiz-q,.bagrut-card,.quiz-header,.quiz-summary,.pc-header,.game-area,.king-card{scroll-margin-top:80px}
 @media(max-width:768px){html{scroll-padding-top:72px}section[id],.quiz-q,.bagrut-card,.quiz-header,.quiz-summary,.pc-header,.game-area,.king-card{scroll-margin-top:72px}}
 h1,h2,h3,h4{font-weight:700}
@@ -395,16 +397,58 @@ a{color:var(--secondary);text-decoration:none}
 .ai-summary p{margin:0 0 .6rem}
 .ai-summary strong{color:var(--primary-dark)}
 /* === RESPONSIVE === */
+@media(max-width:768px){
+.dash-form .form-row{grid-template-columns:1fr}
+.profile-header{flex-direction:column;text-align:center;padding:1rem;gap:.6rem}
+.profile-header .info h3{font-size:1.05rem}
+.dash-header{gap:.6rem}
+.dash-header h2{font-size:1.2rem}
+.chart-bar-row .label{width:60px;font-size:.75rem}
+.chart-bar-row .val{width:34px;font-size:.75rem}
+.hero{padding:2.8rem 1rem 2.2rem;border-radius:0 0 1.8rem 1.8rem}
+.content-page{padding:1.2rem}
+.podcast-hero{padding:1.5rem 1rem}
+.quiz-header{gap:.5rem}
+.quiz-mode-btn{padding:.4rem .75rem;font-size:.8rem}
+.page-nav button{padding:.5rem 1rem;font-size:.85rem}
+.stat-card{padding:1rem}
+.stat-card .stat-num{font-size:1.6rem}
+.dash-admin-header{padding:1rem;flex-direction:column;align-items:stretch}
+.dash-quick-actions{justify-content:center}
+}
 @media(max-width:576px){
 body{font-size:15px;padding-top:56px}
 .hero h1{font-size:1.8rem}
-.hero{padding:2.5rem 1rem 2rem}
-.content-page{padding:1.1rem}
+.hero{padding:2.2rem .9rem 1.8rem}
+.hero .subtitle{font-size:.98rem}
+.content-page{padding:1rem}
+.content-page h3{font-size:1.05rem}
 .game-select{grid-template-columns:1fr 1fr}
 .quiz-q{padding:1rem}
+.quiz-q h4{font-size:.92rem}
+.opt-btn{font-size:.88rem;padding:.65rem .8rem}
+.bagrut-q{padding:1rem}
+.dash-form{padding:1rem}
 .dash-form .form-row{grid-template-columns:1fr}
-.dash-stats{grid-template-columns:1fr 1fr}
+.dash-stats{grid-template-columns:1fr 1fr;gap:.6rem}
+.stat-card{padding:.9rem}
+.stat-card .stat-num{font-size:1.5rem}
+.stat-card .stat-label{font-size:.75rem}
 .login-box{padding:1.5rem 1.2rem}
+.map-modal{width:96%}
+.map-modal-header{padding:.8rem 1rem}
+.map-modal-header h3{font-size:.95rem}
+.game-area{padding:1rem}
+.quiz-summary{padding:1.2rem .8rem}
+.quiz-summary .score-circle{width:96px;height:96px}
+.quiz-summary .score-num{font-size:1.6rem}
+.announcement-card,.material-card{padding:.9rem}
+.btn-quick{padding:.45rem .8rem;font-size:.8rem}
+}
+@media(max-width:380px){
+.dash-stats{grid-template-columns:1fr}
+.hero h1{font-size:1.55rem}
+.game-select{grid-template-columns:1fr}
 }
 @media(min-width:992px){
 .content-page{padding:2rem}
@@ -2192,25 +2236,25 @@ h+='</div>';
 const{data:quizzes}=await sb.from('quiz_attempts').select('*').eq('user_id',currentUser.id).order('completed_at',{ascending:false}).limit(20);
 h+='<div class="detail-card"><h4><i class="bi bi-patch-question"></i> היסטוריית מבחנים</h4>';
 if(quizzes&&quizzes.length>0){
-h+='<table class="dash-table"><tr><th>יחידה</th><th>מצב</th><th>ציון</th><th>תאריך</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>יחידה</th><th>מצב</th><th>ציון</th><th>תאריך</th></tr>';
 quizzes.forEach(q=>{
 const d=new Date(q.completed_at).toLocaleDateString('he-IL');
 h+=`<tr><td>יחידה ${q.unit_id}</td><td>${q.mode==='exam'?'בחינה':'תרגול'}</td><td>${q.score_percent}%</td><td>${d}</td></tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 }else h+='<p style="color:var(--text-light)">עדיין אין ניסיונות מבחנים</p>';
 h+='</div>';
 // Game scores
 const{data:games}=await sb.from('game_scores').select('*').eq('user_id',currentUser.id).order('completed_at',{ascending:false}).limit(20);
 h+='<div class="detail-card"><h4><i class="bi bi-controller"></i> ציוני משחקים</h4>';
 if(games&&games.length>0){
-h+='<table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תאריך</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תאריך</th></tr>';
 const gameNames={map:'מפה',kings:'מלכים',timeline:'ציר זמן',quotes:'ציטוטים',pictures:'חידות תמונה'};
 games.forEach(g=>{
 const d=new Date(g.completed_at).toLocaleDateString('he-IL');
 h+=`<tr><td>${escapeHTML(gameNames[g.game_type]||g.game_type)}</td><td>${parseInt(g.score_percent)||0}%</td><td>${escapeHTML(d)}</td></tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 }else h+='<p style="color:var(--text-light)">עדיין אין ציוני משחקים</p>';
 h+='</div>';
 el.innerHTML=h;
@@ -2361,7 +2405,7 @@ return;
 let h='';
 // Filter + student table
 h+='<div style="margin-bottom:1rem"><input type="text" id="dashSearchInput" placeholder="חפש תלמיד..." style="width:100%;max-width:300px;padding:.5rem .8rem;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;background:var(--bg);color:var(--text);outline:none" oninput="filterDashStudents(this.value)"></div>';
-h+='<table class="dash-table" id="dashStudentTable"><tr><th>שם</th><th>כיתה</th><th>התקדמות</th><th>פעילות אחרונה</th><th>סטטוס</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table" id="dashStudentTable"><tr><th>שם</th><th>כיתה</th><th>התקדמות</th><th>פעילות אחרונה</th><th>סטטוס</th></tr>';
 dashStudents.forEach(s=>{
 const lastDate=s.lastActivity?new Date(s.lastActivity).toLocaleDateString('he-IL'):'לא היתה';
 h+=`<tr class="clickable" onclick="showStudentDetail('${escapeHTML(s.id)}')">
@@ -2372,7 +2416,7 @@ h+=`<tr class="clickable" onclick="showStudentDetail('${escapeHTML(s.id)}')">
 <td><span class="status-badge ${s.is_active?'active':'inactive'}">${s.is_active?'פעיל':'מושבת'}</span></td>
 </tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 // Recent activity timeline
 const{data:recentActs}=await sb.from('activity_log').select('*').order('created_at',{ascending:false}).limit(10);
 if(recentActs&&recentActs.length>0){
@@ -2431,25 +2475,25 @@ h+='</div>';
 const{data:quizzes}=await sb.from('quiz_attempts').select('*').eq('user_id',userId).order('completed_at',{ascending:false}).limit(30);
 h+='<div class="detail-card"><h4><i class="bi bi-patch-question"></i> ניסיונות מבחנים</h4>';
 if(quizzes&&quizzes.length>0){
-h+='<table class="dash-table"><tr><th>יחידה</th><th>מצב</th><th>נכונות</th><th>ציון</th><th>תאריך</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>יחידה</th><th>מצב</th><th>נכונות</th><th>ציון</th><th>תאריך</th></tr>';
 quizzes.forEach(q=>{
 const d=new Date(q.completed_at).toLocaleDateString('he-IL');
 h+=`<tr><td>יחידה ${parseInt(q.unit_id)||0}</td><td>${q.mode==='exam'?'בחינה':'תרגול'}</td><td>${parseInt(q.correct_count)||0}/${parseInt(q.total_count)||0}</td><td>${parseInt(q.score_percent)||0}%</td><td>${escapeHTML(d)}</td></tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 }else h+='<p style="color:var(--text-light)">אין ניסיונות</p>';
 h+='</div>';
 // Game scores
 const{data:games}=await sb.from('game_scores').select('*').eq('user_id',userId).order('completed_at',{ascending:false}).limit(30);
 h+='<div class="detail-card"><h4><i class="bi bi-controller"></i> ציוני משחקים</h4>';
 if(games&&games.length>0){
-h+='<table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תאריך</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>משחק</th><th>ציון</th><th>תאריך</th></tr>';
 const gameNames={map:'מפה',kings:'מלכים',timeline:'ציר זמן',quotes:'ציטוטים',pictures:'חידות תמונה'};
 games.forEach(g=>{
 const d=new Date(g.completed_at).toLocaleDateString('he-IL');
 h+=`<tr><td>${escapeHTML(gameNames[g.game_type]||g.game_type)}</td><td>${parseInt(g.score_percent)||0}%</td><td>${escapeHTML(d)}</td></tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 }else h+='<p style="color:var(--text-light)">אין ציונים</p>';
 h+='</div>';
 // Activity log
@@ -2457,13 +2501,13 @@ const{data:acts}=await sb.from('activity_log').select('*').eq('user_id',userId).
 h+='<div class="detail-card"><h4><i class="bi bi-clock-history"></i> לוג פעילות</h4>';
 if(acts&&acts.length>0){
 const actionNames={login:'התחבר',page_view:'צפה בעמוד',quiz_complete:'סיים מבחן',game_complete:'סיים משחק',quiz_start:'התחיל מבחן',game_start:'התחיל משחק'};
-h+='<table class="dash-table"><tr><th>פעולה</th><th>פרטים</th><th>תאריך</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>פעולה</th><th>פרטים</th><th>תאריך</th></tr>';
 acts.forEach(a=>{
 const d=new Date(a.created_at).toLocaleString('he-IL');
 const meta=a.metadata?JSON.stringify(a.metadata).replace(/[{}"]/g,'').replace(/,/g,', '):'';
 h+=`<tr><td>${escapeHTML(actionNames[a.action]||a.action)}</td><td style="font-size:.8rem">${escapeHTML(meta)}</td><td>${escapeHTML(d)}</td></tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 }else h+='<p style="color:var(--text-light)">אין פעילות</p>';
 h+='</div>';
 el.innerHTML=h;
@@ -2490,12 +2534,12 @@ return(now-new Date(s.lastActivity).getTime())>7*24*60*60*1000;
 });
 h+='<div class="detail-card"><h4><i class="bi bi-exclamation-triangle"></i> תלמידים לא פעילים (7+ ימים)</h4>';
 if(inactiveStudents.length>0){
-h+='<table class="dash-table"><tr><th>שם</th><th>כיתה</th><th>פעילות אחרונה</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>שם</th><th>כיתה</th><th>פעילות אחרונה</th></tr>';
 inactiveStudents.forEach(s=>{
 const d=s.lastActivity?new Date(s.lastActivity).toLocaleDateString('he-IL'):'מעולם לא';
 h+=`<tr><td>${escapeHTML(s.full_name)}</td><td>${escapeHTML(s.class_name||'-')}</td><td>${escapeHTML(d)}</td></tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 }else h+='<p style="color:var(--success)">כל התלמידים פעילים!</p>';
 h+='</div>';
 // Class breakdown
@@ -2507,12 +2551,12 @@ classes[c].students++;
 classes[c].totalPct+=s.overallPct;
 });
 h+='<div class="detail-card"><h4><i class="bi bi-people"></i> סיכום לפי כיתה</h4>';
-h+='<table class="dash-table"><tr><th>כיתה</th><th>תלמידים</th><th>ממוצע התקדמות</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>כיתה</th><th>תלמידים</th><th>ממוצע התקדמות</th></tr>';
 Object.entries(classes).forEach(([c,d])=>{
 const avg=Math.round(d.totalPct/d.students);
 h+=`<tr><td>${escapeHTML(c)}</td><td>${parseInt(d.students)||0}</td><td><span class="progress-mini"><span class="fill" style="width:${parseInt(avg)||0}%"></span></span> ${parseInt(avg)||0}%</td></tr>`;
 });
-h+='</table></div>';
+h+='</table></div></div>';
 el.innerHTML=h;
 }
 
@@ -2527,7 +2571,7 @@ h+='<div class="form-msg" id="addStudentMsg"></div></div>';
 // Existing students list
 h+='<h3 style="margin-bottom:.8rem"><i class="bi bi-people"></i> תלמידים קיימים</h3>';
 if(dashStudents.length>0){
-h+='<table class="dash-table"><tr><th>שם</th><th>אימייל</th><th>כיתה</th><th>סטטוס</th><th>פעולות</th></tr>';
+h+='<div class="table-scroll"><table class="dash-table"><tr><th>שם</th><th>אימייל</th><th>כיתה</th><th>סטטוס</th><th>פעולות</th></tr>';
 dashStudents.forEach(s=>{
 const safeId=escapeHTML(s.id);
 const safeName=escapeHTML(s.full_name);
@@ -2540,7 +2584,7 @@ h+=`<tr>
 <td><button class="btn-action" onclick="toggleStudentActive('${safeId}',${!s.is_active})">${s.is_active?'השבת':'הפעל'}</button> <button class="btn-action danger" onclick="deleteStudent('${safeId}','${safeNameAttr}')">מחק</button></td>
 </tr>`;
 });
-h+='</table>';
+h+='</table></div>';
 }else h+='<p style="color:var(--text-light)">אין תלמידים</p>';
 el.innerHTML=h;
 }
