@@ -1845,6 +1845,7 @@ logActivity('login',{});
 // Role-based navigation
 if(currentProfile?.role==='teacher'){
 nav('teacher-dashboard');
+loadFeedbackBadge();
 }else{
 loadStudentAnnouncements();
 }
@@ -1985,6 +1986,68 @@ if(tab==='announcements')renderDashAnnouncements();
 if(tab==='materials')renderDashMaterials();
 if(tab==='manage')renderDashManage();
 if(tab==='export')renderDashExport();
+if(tab==='feedback')renderDashFeedback();
+}
+async function renderDashFeedback(){
+const el=document.getElementById('dashFeedback');
+el.innerHTML='<p style="color:var(--text-light)">טוען הודעות...</p>';
+try{
+const{data,error}=await sb.from('feedback').select('*').order('created_at',{ascending:false}).limit(500);
+if(error)throw error;
+if(!data||data.length===0){el.innerHTML='<div class="dash-card" style="text-align:center;padding:2rem"><i class="bi bi-inbox" style="font-size:2rem;color:var(--text-light)"></i><p style="margin-top:.5rem;color:var(--text-light)">אין הודעות עדיין</p></div>';return;}
+const catLabel={bug:'🐛 תקלה',content:'📖 תוכן',suggestion:'💡 הצעה',other:'💬 אחר'};
+const statusLabel={new:'חדש',read:'נקרא',resolved:'טופל',archived:'בארכיון'};
+const esc=s=>String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+let h=`<div style="margin-bottom:1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center"><span class="tag">סה"כ: ${data.length}</span><span class="tag" style="background:#D64545;color:#fff">חדשים: ${data.filter(f=>f.status==='new').length}</span><button class="show-ans-btn" onclick="exportFeedbackCSV()" style="margin-right:auto"><i class="bi bi-download"></i> ייצוא CSV</button></div>`;
+data.forEach(f=>{
+const dt=new Date(f.created_at).toLocaleString('he-IL');
+const isNew=f.status==='new';
+h+=`<div class="dash-card" style="margin-bottom:.8rem;background:${isNew?'var(--primary-light)':'var(--card)'};border-right:4px solid ${isNew?'#D64545':'var(--border)'}">
+<div style="display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem">
+<div><strong>${catLabel[f.category]||esc(f.category)}</strong> <span style="color:var(--text-light);font-size:.8rem">· ${dt}</span></div>
+<div style="font-size:.8rem">
+<select onchange="updateFeedbackStatus(${f.id},this.value)" style="padding:.2rem .4rem;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.8rem">
+${Object.entries(statusLabel).map(([k,v])=>`<option value="${k}" ${f.status===k?'selected':''}>${v}</option>`).join('')}
+</select>
+<button onclick="deleteFeedback(${f.id})" style="margin-right:.3rem;background:none;border:none;color:#D64545;cursor:pointer;font-size:1rem" title="מחק">🗑️</button>
+</div>
+</div>
+<div style="background:var(--bg);padding:.7rem;border-radius:8px;white-space:pre-wrap;line-height:1.7;font-size:.92rem">${esc(f.message)}</div>
+<div style="margin-top:.5rem;font-size:.78rem;color:var(--text-light)">👤 ${esc(f.user_name)||'אנונימי'}${f.user_email?' · '+esc(f.user_email):''}</div>
+</div>`;
+});
+el.innerHTML=h;
+window._feedbackCache=data;
+}catch(e){
+console.warn(e);
+el.innerHTML='<div class="dash-card" style="color:#D64545">שגיאה בטעינת ההודעות: '+(e.message||e)+'</div>';
+}
+}
+async function updateFeedbackStatus(id,status){
+try{await sb.from('feedback').update({status}).eq('id',id);showToast('עודכן');loadFeedbackBadge();}catch(e){showToast('שגיאה');}
+}
+async function deleteFeedback(id){
+if(!confirm('למחוק לצמיתות?'))return;
+try{await sb.from('feedback').delete().eq('id',id);renderDashFeedback();loadFeedbackBadge();}catch(e){showToast('שגיאה');}
+}
+function exportFeedbackCSV(){
+const data=window._feedbackCache||[];
+if(!data.length){showToast('אין מה לייצא');return;}
+const rows=[['תאריך','קטגוריה','סטטוס','משתמש','אימייל','הודעה']];
+data.forEach(f=>rows.push([new Date(f.created_at).toLocaleString('he-IL'),f.category,f.status,f.user_name||'',f.user_email||'',(f.message||'').replace(/\n/g,' ')]));
+const csv='\ufeff'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='feedback.csv';a.click();
+}
+async function loadFeedbackBadge(){
+if(currentProfile?.role!=='teacher')return;
+try{
+const{count}=await sb.from('feedback').select('*',{count:'exact',head:true}).eq('status','new');
+const badge=document.getElementById('feedbackBadge');
+if(!badge)return;
+if(count&&count>0){badge.textContent=count;badge.style.display='inline-block';}
+else{badge.style.display='none';}
+}catch(e){}
 }
 
 function calcUnitContentPct(u,up){

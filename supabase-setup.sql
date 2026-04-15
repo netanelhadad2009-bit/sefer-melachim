@@ -188,3 +188,46 @@ CREATE POLICY "teachers_delete_podcasts" ON storage.objects
     bucket_id = 'podcasts'
     AND EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'teacher')
   );
+
+-- ==========================================
+-- FEEDBACK TABLE (bug reports / suggestions from students)
+-- ==========================================
+CREATE TABLE IF NOT EXISTS feedback (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  user_name TEXT,
+  user_email TEXT,
+  category TEXT NOT NULL CHECK (category IN ('bug','suggestion','content','other')),
+  message TEXT NOT NULL CHECK (char_length(message) BETWEEN 3 AND 2000),
+  page_url TEXT,
+  user_agent TEXT,
+  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','read','resolved','archived')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE feedback ENABLE ROW LEVEL SECURITY;
+
+-- Anyone (anon + authenticated) can insert feedback
+CREATE POLICY "anyone_can_submit_feedback" ON feedback
+  FOR INSERT WITH CHECK (true);
+
+-- Only teachers can read feedback
+CREATE POLICY "teachers_read_feedback" ON feedback
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'teacher')
+  );
+
+-- Only teachers can update (mark as read/resolved)
+CREATE POLICY "teachers_update_feedback" ON feedback
+  FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'teacher')
+  );
+
+-- Only teachers can delete feedback
+CREATE POLICY "teachers_delete_feedback" ON feedback
+  FOR DELETE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'teacher')
+  );
+
+CREATE INDEX IF NOT EXISTS idx_feedback_created ON feedback(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_feedback_status ON feedback(status);
