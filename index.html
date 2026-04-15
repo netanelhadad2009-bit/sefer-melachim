@@ -552,6 +552,7 @@ body{font-size:15px;padding-top:56px}
 <button class="sub-tab" onclick="showDashTab('materials',this)"><i class="bi bi-folder-plus"></i> חומרי עזר</button>
 <button class="sub-tab" onclick="showDashTab('manage',this)"><i class="bi bi-people-fill"></i> ניהול תלמידים</button>
 <button class="sub-tab" onclick="showDashTab('export',this)"><i class="bi bi-download"></i> ייצוא</button>
+<button class="sub-tab" onclick="showDashTab('feedback',this)"><i class="bi bi-chat-left-dots"></i> הודעות מהתלמידים <span id="feedbackBadge" style="display:none;background:#D64545;color:#fff;border-radius:10px;padding:2px 7px;font-size:.7rem;margin-right:4px"></span></button>
 </div>
 <div id="dashOverview" class="dash-tab-content"></div>
 <div id="dashDetail" class="dash-tab-content" style="display:none"></div>
@@ -560,9 +561,34 @@ body{font-size:15px;padding-top:56px}
 <div id="dashMaterials" class="dash-tab-content" style="display:none"></div>
 <div id="dashManage" class="dash-tab-content" style="display:none"></div>
 <div id="dashExport" class="dash-tab-content" style="display:none"></div>
+<div id="dashFeedback" class="dash-tab-content" style="display:none"></div>
 </div>
 </section>
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bi bi-arrow-up"></i></button>
+<!-- FEEDBACK FLOATING BUTTON -->
+<button id="feedbackFab" onclick="openFeedbackModal()" aria-label="שלח הערה" style="position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:#4CAF7D;color:#fff;border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;z-index:99;transition:transform .2s"><i class="bi bi-chat-left-dots-fill"></i></button>
+<!-- FEEDBACK MODAL -->
+<div id="feedbackOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:10001;display:none;align-items:center;justify-content:center;padding:1rem" onclick="if(event.target===this)closeFeedbackModal()">
+<div style="background:var(--card,#fff);border-radius:16px;max-width:480px;width:100%;padding:1.5rem;box-shadow:0 10px 40px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+<h3 style="margin:0;color:var(--primary,#D4721A)"><i class="bi bi-chat-left-dots"></i> שליחת הערה למנהל</h3>
+<button onclick="closeFeedbackModal()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light,#666);padding:0 .3rem" aria-label="סגור">×</button>
+</div>
+<p style="color:var(--text-light,#666);font-size:.88rem;margin-bottom:1rem">מצאתם תקלה? יש הצעה לשיפור? נשמח לשמוע.</p>
+<label style="display:block;font-weight:600;margin-bottom:.3rem;font-size:.9rem">סוג ההערה</label>
+<select id="fbCategory" style="width:100%;padding:.6rem;border:1px solid var(--border,#ddd);border-radius:8px;margin-bottom:.8rem;background:var(--card,#fff);color:var(--text,#333)">
+<option value="bug">🐛 תקלה באתר</option>
+<option value="content">📖 תוכן שגוי / שאלה בעייתית</option>
+<option value="suggestion">💡 הצעה לשיפור</option>
+<option value="other">💬 אחר</option>
+</select>
+<label style="display:block;font-weight:600;margin-bottom:.3rem;font-size:.9rem">ההודעה שלכם</label>
+<textarea id="fbMessage" maxlength="2000" placeholder="תיאור מפורט ככל האפשר — באיזו יחידה/שאלה, מה קרה, ומה הייתם רוצים..." style="width:100%;min-height:130px;padding:.7rem;border:1px solid var(--border,#ddd);border-radius:8px;font-family:inherit;font-size:.92rem;line-height:1.6;resize:vertical;background:var(--card,#fff);color:var(--text,#333);margin-bottom:.3rem"></textarea>
+<div id="fbCount" style="font-size:.75rem;color:var(--text-light,#888);text-align:left;margin-bottom:.8rem">0 / 2000</div>
+<div id="fbStatus" style="font-size:.85rem;margin-bottom:.6rem;min-height:1.2em"></div>
+<button id="fbSubmitBtn" onclick="submitFeedback()" style="width:100%;padding:.75rem;background:#4CAF7D;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:1rem"><i class="bi bi-send"></i> שליחה</button>
+</div>
+</div>
 <div class="confetti-container" id="confettiBox"></div>
 <footer style="text-align:center;padding:2rem 1rem;color:var(--text-light);font-size:.82rem;border-top:1px solid var(--border);margin-top:2rem">
 <p>אתר לימוד — מבוסס על חוברת משרד החינוך לספר מלכים</p>
@@ -1948,7 +1974,7 @@ let dashStudents=[];
 let dashSelectedStudent=null;
 
 function showDashTab(tab,btn){
-['overview','detail','stats','announcements','materials','manage','export'].forEach(t=>{
+['overview','detail','stats','announcements','materials','manage','export','feedback'].forEach(t=>{
 const el=document.getElementById('dash'+t.charAt(0).toUpperCase()+t.slice(1));
 if(el)el.style.display=t===tab?'block':'none';
 });
@@ -1961,26 +1987,42 @@ if(tab==='manage')renderDashManage();
 if(tab==='export')renderDashExport();
 }
 
-async function fetchAllStudents(){
-const{data:students}=await sb.from('profiles').select('*').eq('role','student').order('full_name');
-if(!students)return[];
-const{data:progress}=await sb.from('student_progress').select('*');
-const{data:activity}=await sb.from('activity_log').select('user_id,created_at').order('created_at',{ascending:false});
-return students.map(s=>{
-const sp=(progress||[]).filter(p=>p.user_id===s.id);
-let totalPct=0;
-UNITS.forEach(u=>{
-const up=sp.find(p=>p.unit_id===u.id);
-if(up){
-const cpct=Math.min(100,(up.content_page/(u.pages.length-1))*100);
-const qpct=u.americanQuestions?Math.min(100,(up.quiz_score/u.americanQuestions.length)*100):0;
-totalPct+=Math.round((cpct+qpct)/2);
+function calcUnitContentPct(u,up){
+if(!up)return 0;
+const denom=Math.max(1,((u.pages||[]).length-1));
+return Math.min(100,Math.round((up.content_page/denom)*100));
 }
-});
-const overallPct=Math.round(totalPct/UNITS.length);
-const lastAct=(activity||[]).find(a=>a.user_id===s.id);
+function calcUnitOverallPct(u,up){
+if(!up)return 0;
+const denom=Math.max(1,((u.pages||[]).length-1));
+const cpct=Math.min(100,(up.content_page/denom)*100);
+const qLen=(u.americanQuestions||[]).length;
+const qpct=qLen>0?Math.min(100,(up.quiz_score/qLen)*100):cpct;
+return Math.round((cpct+qpct)/2);
+}
+async function fetchAllStudents(){
+try{
+const[stuRes,progRes,actRes]=await Promise.all([
+sb.from('profiles').select('*').eq('role','student').order('full_name'),
+sb.from('student_progress').select('*'),
+sb.from('activity_log').select('user_id,created_at').order('created_at',{ascending:false})
+]);
+if(stuRes.error)throw stuRes.error;
+const students=stuRes.data||[];
+const progress=progRes.data||[];
+const activity=actRes.data||[];
+return students.map(s=>{
+const sp=progress.filter(p=>p.user_id===s.id);
+let totalPct=0;
+UNITS.forEach(u=>{totalPct+=calcUnitOverallPct(u,sp.find(p=>p.unit_id===u.id));});
+const overallPct=UNITS.length?Math.round(totalPct/UNITS.length):0;
+const lastAct=activity.find(a=>a.user_id===s.id);
 return{...s,progress:sp,overallPct,lastActivity:lastAct?.created_at};
 });
+}catch(e){
+console.error('fetchAllStudents error',e);
+return[];
+}
 }
 
 async function renderDashOverview(){
@@ -2072,7 +2114,7 @@ h+=`<div class="profile-header">
 h+='<div class="detail-card"><h4><i class="bi bi-bar-chart"></i> התקדמות ביחידות</h4>';
 UNITS.forEach(u=>{
 const up=dashSelectedStudent.progress.find(p=>p.unit_id===u.id);
-const cpct=up?Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100)):0;
+const cpct=calcUnitContentPct(u,up);
 h+=`<div class="chart-bar-row"><span class="label">${u.icon} יחידה ${u.id}</span><div class="bar"><div class="fill" style="width:${cpct}%;background:${u.color}"></div></div><span class="val">${cpct}%</span></div>`;
 });
 h+='</div>';
@@ -2121,19 +2163,13 @@ el.innerHTML=h;
 async function renderDashStats(){
 const el=document.getElementById('dashStats');
 el.innerHTML='<p style="color:var(--text-light)">טוען סטטיסטיקות...</p>';
-if(dashStudents.length===0)dashStudents=await fetchAllStudents();
+dashStudents=await fetchAllStudents();
 if(dashStudents.length===0){el.innerHTML='<div class="empty-state"><i class="bi bi-graph-up"></i><p>אין נתונים להצגה</p></div>';return;}
 let h='<div class="detail-card"><h4><i class="bi bi-bar-chart"></i> ממוצע התקדמות לכל יחידה</h4>';
 UNITS.forEach(u=>{
 let total=0;
-dashStudents.forEach(s=>{
-const up=s.progress.find(p=>p.unit_id===u.id);
-if(up){
-const cpct=Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100));
-total+=cpct;
-}
-});
-const avg=Math.round(total/dashStudents.length);
+dashStudents.forEach(s=>{total+=calcUnitOverallPct(u,s.progress.find(p=>p.unit_id===u.id));});
+const avg=dashStudents.length?Math.round(total/dashStudents.length):0;
 h+=`<div class="chart-bar-row"><span class="label">${u.icon} יחידה ${u.id}</span><div class="bar"><div class="fill" style="width:${avg}%;background:${u.color}"></div></div><span class="val">${avg}%</span></div>`;
 });
 h+='</div>';
@@ -2171,8 +2207,9 @@ h+='</table></div>';
 el.innerHTML=h;
 }
 
-function renderDashManage(){
+async function renderDashManage(){
 const el=document.getElementById('dashManage');
+if(el&&!el.dataset.loading){el.dataset.loading='1';dashStudents=await fetchAllStudents();delete el.dataset.loading;}
 let h='<div class="dash-form"><h3><i class="bi bi-person-plus"></i> הוספת תלמיד חדש</h3>';
 h+='<div class="form-row"><input type="text" id="newStudentName" placeholder="שם מלא"><input type="email" id="newStudentEmail" placeholder="אימייל" dir="ltr"></div>';
 h+='<div class="form-row"><input type="password" id="newStudentPass" placeholder="סיסמא" dir="ltr"><input type="text" id="newStudentClass" placeholder="כיתה (לא חובה)"></div>';
@@ -2257,7 +2294,8 @@ el.innerHTML=h;
 }
 
 async function exportStudentsCSV(){
-if(dashStudents.length===0)dashStudents=await fetchAllStudents();
+dashStudents=await fetchAllStudents();
+if(dashStudents.length===0){alert('אין תלמידים לייצוא');return;}
 let csv='\ufeff"שם","אימייל","כיתה","סטטוס","התקדמות כללית %"';
 UNITS.forEach(u=>{csv+=',"יחידה '+u.id+' %"';});
 csv+='\n';
@@ -2265,7 +2303,7 @@ dashStudents.forEach(s=>{
 csv+=`"${s.full_name}","${s.email}","${s.class_name||''}","${s.is_active?'פעיל':'מושבת'}","${s.overallPct}"`;
 UNITS.forEach(u=>{
 const up=s.progress.find(p=>p.unit_id===u.id);
-const cpct=up?Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100)):0;
+const cpct=calcUnitContentPct(u,up);
 csv+=',"'+cpct+'"';
 });
 csv+='\n';
@@ -2277,7 +2315,9 @@ link.download='students_report.csv';
 link.click();
 }
 
-function printReport(){
+async function printReport(){
+dashStudents=await fetchAllStudents();
+if(dashStudents.length===0){alert('אין תלמידים להדפסה');return;}
 const w=window.open('','','width=800,height=600');
 let h='<html dir="rtl"><head><style>body{font-family:Arial,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:6px 8px;text-align:right;font-size:12px}th{background:#f0f0f0}h1{font-size:18px}h2{font-size:14px;margin-top:20px}</style></head><body>';
 h+='<h1>דוח התקדמות — ספר מלכים</h1>';
@@ -2289,7 +2329,7 @@ dashStudents.forEach(s=>{
 h+=`<tr><td>${s.full_name}</td><td>${s.class_name||'-'}</td><td>${s.overallPct}%</td>`;
 UNITS.forEach(u=>{
 const up=s.progress.find(p=>p.unit_id===u.id);
-const cpct=up?Math.min(100,Math.round((up.content_page/(u.pages.length-1))*100)):0;
+const cpct=calcUnitContentPct(u,up);
 h+=`<td>${cpct}%</td>`;
 });
 h+='</tr>';
@@ -3783,6 +3823,53 @@ if(!container){container=document.createElement('div');container.id='toastContai
 const t=document.createElement('div');t.className='toast-msg';t.textContent=msg;
 container.appendChild(t);
 setTimeout(()=>t.remove(),3000);
+}
+// ========== FEEDBACK ==========
+function openFeedbackModal(){
+document.getElementById('feedbackOverlay').style.display='flex';
+document.getElementById('fbStatus').textContent='';
+setTimeout(()=>document.getElementById('fbMessage').focus(),100);
+}
+function closeFeedbackModal(){
+document.getElementById('feedbackOverlay').style.display='none';
+}
+document.addEventListener('input',e=>{
+if(e.target&&e.target.id==='fbMessage'){
+const c=document.getElementById('fbCount');
+if(c)c.textContent=`${e.target.value.length} / 2000`;
+}
+});
+async function submitFeedback(){
+const btn=document.getElementById('fbSubmitBtn');
+const status=document.getElementById('fbStatus');
+const msg=document.getElementById('fbMessage').value.trim();
+const cat=document.getElementById('fbCategory').value;
+status.style.color='';status.textContent='';
+if(msg.length<3){status.style.color='#D64545';status.textContent='כתבו לפחות 3 תווים';return;}
+if(msg.length>2000){status.style.color='#D64545';status.textContent='ההודעה ארוכה מדי (מקסימום 2000 תווים)';return;}
+btn.disabled=true;btn.textContent='שולח...';
+try{
+const payload={
+category:cat,
+message:msg,
+user_id:currentUser&&currentUser.id!=='guest'?currentUser.id:null,
+user_name:currentProfile?.full_name||(isGuest?'אורח':null),
+user_email:currentProfile?.email||currentUser?.email||null,
+page_url:location.href.substring(0,500),
+user_agent:navigator.userAgent.substring(0,300)
+};
+const{error}=await sb.from('feedback').insert(payload);
+if(error)throw error;
+status.style.color='#4CAF7D';status.textContent='✓ נשלח! תודה רבה על המשוב.';
+document.getElementById('fbMessage').value='';
+document.getElementById('fbCount').textContent='0 / 2000';
+setTimeout(closeFeedbackModal,1500);
+}catch(e){
+console.warn('feedback submit failed',e);
+status.style.color='#D64545';status.textContent='שגיאה בשליחה — נסו שוב מאוחר יותר';
+}finally{
+btn.disabled=false;btn.innerHTML='<i class="bi bi-send"></i> שליחה';
+}
 }
 // ========== INIT ==========
 window.addEventListener('DOMContentLoaded',async()=>{
