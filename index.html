@@ -15,8 +15,10 @@
 :root{--bg:#FEF9F3;--bg2:#F8F4ED;--primary:#D4721A;--primary-light:#FFF3E6;--primary-dark:#B85E12;--secondary:#3D7CC9;--secondary-light:#EBF3FC;--text:#2C3E50;--text-light:#7A6E62;--success:#4CAF7D;--success-light:#E8F5EE;--error:#D64545;--error-light:#FDECEC;--card:#FFFFFF;--border:#E6DFD5;--shadow:0 4px 20px rgba(44,62,80,.06);--shadow-lg:0 8px 32px rgba(44,62,80,.1);--radius:14px;--radius-sm:8px;--transition:.25s cubic-bezier(.4,0,.2,1)}
 [data-theme=dark]{--bg:#1A1D23;--bg2:#22262E;--primary:#F0923A;--primary-light:#2E2518;--primary-dark:#F5A352;--secondary:#5B9BE6;--secondary-light:#1C2A3C;--text:#E4E2DE;--text-light:#9C9488;--card:#272B34;--border:#3A3E47;--shadow:0 4px 20px rgba(0,0,0,.3);--shadow-lg:0 8px 32px rgba(0,0,0,.4)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
 body{font-family:'Assistant',system-ui,sans-serif;font-size:16px;line-height:1.75;background:var(--bg);color:var(--text);margin:0;padding-top:60px;transition:background var(--transition),color var(--transition)}
+section[id],.quiz-q,.bagrut-card,.quiz-header,.quiz-summary,.pc-header,.game-area,.king-card{scroll-margin-top:80px}
+@media(max-width:768px){html{scroll-padding-top:72px}section[id],.quiz-q,.bagrut-card,.quiz-header,.quiz-summary,.pc-header,.game-area,.king-card{scroll-margin-top:72px}}
 h1,h2,h3,h4{font-weight:700}
 a{color:var(--secondary);text-decoration:none}
 ::selection{background:var(--primary);color:#fff}
@@ -400,6 +402,12 @@ body{font-size:15px;padding-top:56px}
 </style>
 </head>
 <body>
+<!-- APP LOADER -->
+<div id="appLoader" style="position:fixed;inset:0;background:var(--bg,#FEF9F3);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem">
+<div style="width:48px;height:48px;border:4px solid #E8D4B8;border-top-color:#D4721A;border-radius:50%;animation:appLoadSpin 1s linear infinite"></div>
+<div style="color:#D4721A;font-weight:700">טוען...</div>
+</div>
+<style>@keyframes appLoadSpin{to{transform:rotate(360deg)}}</style>
 <!-- LOGIN OVERLAY -->
 <div id="loginOverlay" class="login-overlay" style="display:none">
 <div class="login-box">
@@ -711,10 +719,7 @@ americanQuestions:[
     {q:"מה היה העונש שנגזר על שלמה בעקבות חטאו?",options:["קריעת הממלכה וחלוקתה, אך רק בימי בנו","חורבן מיידי של המקדש","הגלייתו מארץ ישראל","השמדת כל צאצאיו"],correct:0,explanation:"ה' אמר לשלמה: 'קרע אקרע את הממלכה מעליך ונתתיה לעבדך... אך בימיך לא אעשנה למען דוד אביך'."},
     {q:"מה מבטיח ה' לשלמה לגבי בית המקדש לאחר סיום בנייתו?",options:["שיקדש את הבית וישים שמו בו עד עולם","שהבית לא ייחרב לעולם","שכל העמים יתפללו בו","שכל עושרו יישמר בו"],correct:0,explanation:"ה' מבטיח: 'הקדשתי את הבית הזה אשר בנתה לשום שמי שם עד עולם והיו עיני ולבי שם'."},
     {q:"איזה ביטוי מציין את השלווה בממלכת שלמה?",options:["'וישב יהודה וישראל לבטח איש תחת גפנו ותחת תאנתו'","'ויהי שלום בין שלמה וחירם'","'כל הארץ שקטה ממלחמה'","'וירב השלום בכל גבולותיו'"],correct:0,explanation:"הביטוי 'וישב יהודה וישראל לבטח איש תחת גפנו ותחת תאנתו' מעיד על הביטחון והשלווה בימי שלמה."},
-    {q:"אילו אולמות מוזכרים שנבנו כחלק מבית המלך?",options:["בית יער הלבנון ואולם הכסא","בית עגל הזהב ומזבח הנחושת","בתים מבוצרים למלכת שבא","מקדשים לעבודה זרה"],correct:0,explanation:"בין אולמות בית המלך נמנים 'בית יער הלבנון' — אולם גדול עם עמודי ארז, ו'אולם הכסא' — מקום המשפט."},
-    {q:"מהם שני העונשים שה' הזהיר בהתגלות השנייה?",options:["גלות וחורבן המקדש","מלחמה ורעב","מגפה ובצורת","כיבוש ועבדות"],correct:0,explanation:"ה' הזהיר: אם יסורו מדרכו — ישראל ייכרת מעל האדמה (גלות), והמקדש ישולח מעל פניו (חורבן)."},
-    {q:"כמה משלים דיבר שלמה?",options:["אלף","שלושת אלפים","חמישה ואלף","עשרת אלפים"],correct:1,explanation:"הכתוב מציין: 'וידבר שלשת אלפים משל ויהי שירו חמישה ואלף' — ביטוי לחכמתו יוצאת הדופן."},
-    {q:"מה הביאה מלכת שבא כמתנות לשלמה?",options:["סוסים ומרכבות","120 ככר זהב, בשמים ואבנים יקרות","עבדים ושפחות","חיילים ועבדים"],correct:1,explanation:"מלכת שבא הביאה מתנות עצומות: 120 ככר זהב, בשמים הרבה מאוד ואבנים יקרות."}
+    {q:"אילו אולמות מוזכרים שנבנו כחלק מבית המלך?",options:["בית יער הלבנון ואולם הכסא","בית עגל הזהב ומזבח הנחושת","בתים מבוצרים למלכת שבא","מקדשים לעבודה זרה"],correct:0,explanation:"בין אולמות בית המלך נמנים 'בית יער הלבנון' — אולם גדול עם עמודי ארז, ו'אולם הכסא' — מקום המשפט."}
 
 ],
 bagrutQuestions:[
@@ -964,7 +969,6 @@ americanQuestions:[
 {q:"מה הנס בבית האלמנה בצרפת?",options:["ריפוי ממחלה","הקמח לא כלה והשמן לא חסר","מים הפכו ליין","אש מהשמים"],correct:1,explanation:'"כד הקמח לא תכלה וצפחת השמן לא תחסר" — נס מתמשך לאורך כל תקופת הבצורת.'},
 {q:"את מי ציווה ה' את אליהו למנות בהר חורב?",options:["שלושה מלכים","חזאל, יהוא ואלישע","נביאים חדשים","כהנים"],correct:1,explanation:"ה' ציווה למנות: חזאל למלך ארם, יהוא למלך ישראל, אלישע לנביא תחת אליהו."},
  // Unit 3 - אליהו ואחאב - 10 new questions
-    {q:"מה עשה חיאל בית האלי וכיצד נענש?",options:["בנה במה — נהרג","בנה מחדש את יריחו — בניו מתו","עבד את הבעל — הוגלה","מרד באחאב — נכלא"],correct:1,explanation:"חיאל בנה מחדש את יריחו בניגוד לקללת יהושע. נענש: באבירם בכורו יסדה ובשגוב צעירו הציב דלתיה — בניו מתו."},
     {q:"כיצד התקיים אליהו בנחל כרית?",options:["ציד חיות","עורבים הביאו לו לחם ובשר","אכל צמחי בר","אנשים הביאו לו אוכל"],correct:1,explanation:"עורבים הביאו לאליהו לחם ובשר בבוקר ובערב — נס מופלא. שתה מן הנחל עד שיבש."},
     {q:"במה האשים אחאב את אליהו ובמה האשים אליהו את אחאב?",options:["אחאב: גנב, אליהו: רוצח","אחאב: עוכר ישראל, אליהו: אתה ובית אביך עזבתם את ה'","אחאב: בוגד, אליהו: חוטא","אחאב: שקרן, אליהו: עובד אלילים"],correct:1,explanation:'אחאב קרא לאליהו "עוכר ישראל". אליהו השיב: "לא אנכי עכרתי את ישראל כי אם אתה ובית אביך בעזבכם את מצוות ה\'".'},
     {q:"כמה אבנים לקח אליהו לתקן את מזבח ה' בהר הכרמל?",options:["שבע","עשר","שתים עשרה","ארבע"],correct:2,explanation:"אליהו לקח 12 אבנים — כמספר שבטי בני יעקב — סמל לאחדות ישראל, גם בזמן הפילוג."},
@@ -1077,7 +1081,6 @@ americanQuestions:[
     {q:"היכן נהרג יורם בן אחאב בידי יהוא?",options:["בשומרון","בשדה נבות היזרעאלי","בירושלים","בדמשק"],correct:1,explanation:"יהוא הרג את יורם בשדה נבות — קיום מדויק של נבואת אליהו: 'במקום אשר לקקו הכלבים את דם נבות'."},
     {q:"כיצד מתה איזבל?",options:["נהרגה בקרב","הפילוה מהחלון ונדרסה","מתה ממחלה","הוגלתה ומתה"],correct:1,explanation:"יהוא ציווה על הסריסים להפיל את איזבל מהחלון. היא נפלה, דמה ניתז, והכלבים אכלו את בשרה — קיום נבואה."},
     {q:"כמה בני מלך של אחאב השמיד יהוא?",options:["עשרה","שלושים","שבעים","מאה"],correct:2,explanation:"יהוא שלח מכתבים לשומרי 70 בני אחאב בשומרון ודרש את ראשיהם — הם שלחו אותם בסלים."},
-    {q:"כיצד הערים יהוא על עובדי הבעל?",options:["שלח נביאים","הכריז שרוצה לעבוד את הבעל 'הרבה' וכינס את כולם","הבטיח שלום","שלח מתנות"],correct:1,explanation:"יהוא הכריז שרוצה לעבוד את הבעל יותר מאחאב, כינס את כל עובדיו לבית הבעל — והרג את כולם."},
     {q:"מי הציל את יואש התינוק מעתליה?",options:["יהוידע הכהן","יהושבע אחות אחזיהו","אלישע","נביא אלמוני"],correct:1,explanation:"יהושבע, אחות אחזיהו, גנבה את יואש מתוך בני המלך המומתים והסתירה אותו עם מינקתו בבית ה' שש שנים."},
     {q:"כיצד מימן יואש את שיפוץ המקדש?",options:["ממסים","ארון עם חור ליד המזבח לאיסוף תרומות","ממכירת אוצרות","מעזרת חירם"],correct:1,explanation:"יואש שם ארון עם חור במכסהו ליד המזבח — הכהנים ונותני המקדש שמו בו כסף, ומשם מומנו התיקונים."},
     {q:"מה היה משל החוח והארז?",options:["על חכמה וטיפשות","חוח רצה להתחתן עם בת ארז — וחיה דרסה אותו","על עץ שנפל","על פרח שגדל"],correct:1,explanation:"מלך ישראל אמר לאמציהו: החוח (אתה) ביקש מהארז (אני) את בתו — וחיית שדה דרסה את החוח. אל תתגרה בחזק ממך."},
@@ -1724,17 +1727,33 @@ let _syncTimer=null;
 
 // ========== AUTH ==========
 async function checkSession(){
-const{data:{session}}=await sb.auth.getSession();
+try{
+const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000));
+const{data:{session}}=await Promise.race([sb.auth.getSession(),timeout]);
 if(session){
 currentUser=session.user;
-const{data:prof,error:profErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+try{
+const profPromise=sb.from('profiles').select('*').eq('id',currentUser.id).single();
+const profTimeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),6000));
+const{data:prof}=await Promise.race([profPromise,profTimeout]);
 currentProfile=prof;
+}catch(e){console.warn('profile fetch failed',e);currentProfile={id:currentUser.id,role:'student',full_name:currentUser.email};}
 onAuthReady();
 }else{
 showLoginOverlay();
 }
+}catch(e){
+console.warn('checkSession failed',e);
+showLoginOverlay();
+const errEl=document.getElementById('loginError');
+if(errEl)errEl.textContent='בעיית חיבור — נסו לרענן או להתחבר מחדש';
+}finally{
+const loader=document.getElementById('appLoader');
+if(loader)loader.style.display='none';
+}
 }
 function showLoginOverlay(){
+const loader=document.getElementById('appLoader');if(loader)loader.style.display='none';
 document.getElementById('loginOverlay').style.display='flex';
 document.getElementById('loginEmail').focus();
 }
